@@ -239,7 +239,7 @@ def run():
 
                    # print('entrou',type(palavras))
                 else:
-                   # print('naaooooooooooooooooo', type(palavras))
+                   # print('naaoooooooooooooooo', type(palavras))
                    pass
 
                     

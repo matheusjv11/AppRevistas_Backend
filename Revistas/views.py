@@ -106,9 +106,9 @@ class AutoresUpdateView(RetrieveUpdateAPIView):
     queryset = Autores.objects.all()
     serializer_class = AutoresSerializer
 
-class AutoresDeleteView(RetrieveDestroyAPIView):
+"""class AutoresDeleteView(RetrieveDestroyAPIView):
     queryset = Autores.objects.all()
-    serializer_class = AutoresSerializer
+    serializer_class = AutoresSerializer"""
 
 #----------- view Artigos --------------
 
@@ -121,6 +121,23 @@ class ArtigosView(ListCreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','titulo_portugues','titulo_english','descricao_portugues','descricao_english']
 
+class ArtigosBYEDICOESIDView(ListCreateAPIView):
+    #queryset = Artigos.objects.all()
+    serializer_class = ArtigosSerializer
+
+    #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
+    #Para a pesquisa, basta chama essa url com /?search=parametros
+    #filter_backends=[SearchFilter]
+    #search_fields = ['edicao_id__id']
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        edicao_id = self.kwargs['edicao_id']
+        return Artigos.objects.filter(edicao_id__id=edicao_id)
+
 class SingleArtigosView(RetrieveAPIView):
     queryset = Artigos.objects.all()
     serializer_class = ArtigosSerializer
@@ -129,9 +146,9 @@ class ArtigosUpdateView(RetrieveUpdateAPIView):
     queryset = Artigos.objects.all()
     serializer_class = ArtigosSerializer
 
-class ArtigosDeleteView(RetrieveDestroyAPIView):
+"""class ArtigosDeleteView(RetrieveDestroyAPIView):
     queryset = Artigos.objects.all()
-    serializer_class = ArtigosSerializer
+    serializer_class = ArtigosSerializer"""
 
 #----------- view Categoria --------------
 
@@ -152,9 +169,9 @@ class CategoriaUpdateView(RetrieveUpdateAPIView):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
 
-class CategoriaDeleteView(RetrieveDestroyAPIView):
+"""class CategoriaDeleteView(RetrieveDestroyAPIView):
     queryset = Categoria.objects.all()
-    serializer_class = CategoriaSerializer
+    serializer_class = CategoriaSerializer"""
 
 #----------- view Edicoes --------------
 
@@ -166,6 +183,23 @@ class EdicoesView(ListCreateAPIView):
     #Para a pesquisa, basta chama essa url com /?search=parametros
     filter_backends=[SearchFilter]
     search_fields = ['id','edicao_portugues','edicao_english']
+
+class EdicoesIDREVISTAView(ListCreateAPIView):
+    #queryset = Edicoes.objects.all()
+    serializer_class = EdicoesSerializer
+
+    #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
+    #Para a pesquisa, basta chama essa url com /?search=parametros
+    #filter_backends=[SearchFilter]
+    #search_fields = ['revista_id']
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        revista_id = self.kwargs['revista_id']
+        return Edicoes.objects.filter(revista_id__id=revista_id)
 
 class SingleEdicoesView(RetrieveAPIView):
     queryset = Edicoes.objects.all()
@@ -224,9 +258,9 @@ class ComentariosUpdateView(RetrieveUpdateAPIView):
     queryset = Comentarios.objects.all()
     serializer_class = ComentariosSerializer
 
-class ComentariosDeleteView(RetrieveDestroyAPIView):
+"""class ComentariosDeleteView(RetrieveDestroyAPIView):
     queryset = Comentarios.objects.all()
-    serializer_class = ComentariosSerializer
+    serializer_class = ComentariosSerializer"""
 
 #----------- view Noticias --------------
 
@@ -250,7 +284,7 @@ class NoticiasUpdateView(RetrieveUpdateAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasSerializer
 
-class NoticiasDeleteView(RetrieveDestroyAPIView):
+"""class NoticiasDeleteView(RetrieveDestroyAPIView):
     queryset = Noticias.objects.all()
-    serializer_class = NoticiasSerializer
+    serializer_class = NoticiasSerializer """
 

@@ -53,8 +53,7 @@ urlpatterns = [
 
     #ARTIGOS
     url(r'^artigos', ArtigosView.as_view(),name='artigos'),
-    url('^getbyidedicoes-artigos/(?P<edicao_id>.+)/$', ArtigosBYEDICOESIDView.as_view()),
-    #url(r'^getbyidedicoes-artigos', ArtigosBYEDICOESIDView.as_view(),name='artigos-by-idEdicao'),
+    url('^get-artigosdaedicao/(?P<edicao_id>.+)/$', ArtigosBYEDICOESIDView.as_view()),
     url(r'^detail-artigos/(?P<pk>\d+)', SingleArtigosView.as_view(),name='artigos-datail'),
     url(r'^update-artigos/(?P<pk>\d+)', ArtigosUpdateView.as_view(),name='artigos-update'),
 
@@ -65,7 +64,7 @@ urlpatterns = [
 
     #EDICOES
     url(r'^edicoes', EdicoesView.as_view(),name='edicoes'),
-    url('^getbyidrevista-edicoes/(?P<revista_id>.+)/$', EdicoesIDREVISTAView.as_view()),
+    url('^get-edicoesdarevista/(?P<revista_id>.+)/$', EdicoesIDREVISTAView.as_view()),
     url(r'^detail-edicoes/(?P<pk>\d+)', SingleEdicoesView.as_view(),name='edicoes-datail'),
     url(r'^update-edicoes/(?P<pk>\d+)', EdicoesUpdateView.as_view(),name='edicoes-update'),
 

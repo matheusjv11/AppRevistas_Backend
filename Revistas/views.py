@@ -119,7 +119,7 @@ class ArtigosView(ListCreateAPIView):
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
     #Para a pesquisa, basta chama essa url com /?search=parametros
     filter_backends=[SearchFilter]
-    search_fields = ['id','titulo_portugues','titulo_english','descricao_portugues','descricao_english']
+    search_fields = ['id','titulo_portugues','titulo_english','descricao_portugues','descricao_english','categoria_id__nome_categoria']
 
 class ArtigosBYEDICOESIDView(ListCreateAPIView):
     #queryset = Artigos.objects.all()
@@ -190,8 +190,8 @@ class EdicoesIDREVISTAView(ListCreateAPIView):
 
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
     #Para a pesquisa, basta chama essa url com /?search=parametros
-    #filter_backends=[SearchFilter]
-    #search_fields = ['revista_id']
+    filter_backends=[SearchFilter]
+    search_fields = ['edicao_portugues']
 
     def get_queryset(self):
         """

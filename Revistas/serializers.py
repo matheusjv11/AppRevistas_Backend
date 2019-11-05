@@ -88,12 +88,12 @@ class AutoresSerializer(serializers.ModelSerializer):
         model = Autores
         fields = ('id', 'nome_autor')
 
-class ArtigosSerializer(serializers.ModelSerializer):
+class PalavrasChaveSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Artigos
-        #fields = ('id', 'titulo_portugues', 'titulo_english', 'descricao_portugues', 'descricao_english', 'link_pdf','categoria','edicao','autores__id')
-        fields = '__all__'
+        model = Palavras_chave
+        fields = ('id', 'assunto')
+
 
 class CategoriaSerializer(serializers.ModelSerializer):
     
@@ -101,17 +101,29 @@ class CategoriaSerializer(serializers.ModelSerializer):
         model = Categoria
         fields = ('id', 'nome_categoria', 'revista_id')
 
-class EdicoesSerializer(serializers.ModelSerializer):
+class ArtigosSerializer(serializers.ModelSerializer):
     
+    autores = AutoresSerializer(many=True, read_only=True)
+    palavras_chave = PalavrasChaveSerializer(many=True, read_only=True)
+    categoria = CategoriaSerializer(many=False, read_only=True)
+    
+    class Meta:
+        model = Artigos
+        #fields = ('id', 'titulo_portugues', 'titulo_english', 'descricao_portugues', 'descricao_english', 'link_pdf','categoria','edicao','autores__id')
+        fields = '__all__'
+
+
+
+class EdicoesSerializer(serializers.ModelSerializer):
+
+    revista_id = RevistaSerializer
     class Meta:
         model = Edicoes
         fields = ('id', 'edicao_portugues', 'edicao_english', 'data_lancamento','revista_id')
-
-class PalavrasChaveSerializer(serializers.ModelSerializer):
+   
     
-    class Meta:
-        model = Palavras_chave
-        fields = ('id', 'assunto')
+
+
 
 class NoticiasSerializer(serializers.ModelSerializer):
 

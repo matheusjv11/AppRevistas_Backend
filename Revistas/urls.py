@@ -29,6 +29,10 @@ from .views import (
     NoticiasUpdateView,
     NoticiasView,
     SingleNoticiasView,
+    AvaliacoesView,
+    AvaliacoesUpdateView,
+    AvaliacoesNOTAView,
+    SingleAvaliacoesView,
      )
 
 from django.contrib import admin
@@ -84,6 +88,12 @@ urlpatterns = [
     url(r'^detail-noticias/(?P<pk>\d+)', SingleNoticiasView.as_view(),name='noticias-datail'),
     url(r'^update-noticias/(?P<pk>\d+)', NoticiasUpdateView.as_view(),name='noticias-update'),
    
+    #AVALIACOES
+    url(r'^avaliacoes', AvaliacoesView.as_view(),name='avaliacoes'),
+    url('^get-avaliacoespornota/(?P<nota>.+)/$', AvaliacoesNOTAView.as_view()),
+    url(r'^detail-avaliacoes/(?P<pk>\d+)', SingleAvaliacoesView.as_view(),name='avaliacoes-datail'),
+    url(r'^update-avaliacoes/(?P<pk>\d+)', AvaliacoesUpdateView.as_view(),name='avaliacoes-update'),
+
     #USUARIOS
     url(r'^usuarios', UserView.as_view(),name='usuarios'),
     url(r'^login', UserLoginView.as_view(),name='login'),

@@ -3,7 +3,7 @@ from rest_framework.serializers import CharField, EmailField
 from rest_framework.validators import ValidationError
 #from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from Revistas.models import Autores, Artigos,Categoria,Edicoes,Revista, Palavras_chave,Noticias,Comentarios, Usuario
+from Revistas.models import Autores, Artigos,Categoria,Edicoes,Revista, Palavras_chave,Noticias,Comentarios, Usuario, Avaliacoes
 from django.db.models import Q
 
 
@@ -120,7 +120,11 @@ class EdicoesSerializer(serializers.ModelSerializer):
         model = Edicoes
         fields = ('id', 'edicao_portugues', 'edicao_english', 'data_lancamento','revista_id')
    
-    
+
+class AvaliacaoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Avaliacoes
+        fields = ('id', 'nota', 'id_usuario', 'artigo_id')
 
 
 

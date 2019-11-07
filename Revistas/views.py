@@ -13,6 +13,7 @@ from .serializers import (
     PalavrasChaveSerializer,
     NoticiasSerializer,
     ComentariosSerializer,
+    AvaliacaoSerializer,
     )
 
 from rest_framework.response import Response
@@ -31,7 +32,7 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView,
     RetrieveDestroyAPIView,)
 
-from Revistas.models import Autores, Artigos,Categoria,Edicoes,Revista,Palavras_chave, Noticias, Comentarios
+from Revistas.models import Autores, Avaliacoes,Artigos,Categoria,Edicoes,Revista,Palavras_chave, Noticias, Comentarios
 from django.db.models import Q
 from rest_framework.filters import SearchFilter, OrderingFilter
 
@@ -276,6 +277,18 @@ class NoticiasView(ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(autor=self.request.user.id)
 
+class AvaliacoesNOTAView(ListCreateAPIView):
+    #queryset = Edicoes.objects.all()
+    serializer_class = AvaliacaoSerializer
+    
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        nota = self.kwargs['nota']
+        return Edicoes.objects.filter(nota=nota)
+
 class SingleNoticiasView(RetrieveAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasSerializer
@@ -288,3 +301,24 @@ class NoticiasUpdateView(RetrieveUpdateAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasSerializer """
 
+#----------- view Avaliações --------------
+
+class AvaliacoesView(ListCreateAPIView):
+    queryset = Avaliacoes.objects.all()
+    serializer_class = AvaliacaoSerializer
+
+    #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
+    #Para a pesquisa, basta chama essa url com /?search=parametros
+    #filter_backends=[SearchFilter]
+    #search_fields = ['id','nota','id_','autor']
+
+    def perform_create(self, serializer):
+        serializer.save(id_usuario=self.request.user.id)
+
+class SingleAvaliacoesView(RetrieveAPIView):
+    queryset = Avaliacoes.objects.all()
+    serializer_class = AvaliacaoSerializer
+
+class AvaliacoesUpdateView(RetrieveUpdateAPIView):
+    queryset = Avaliacoes.objects.all()
+    serializer_class = AvaliacaoSerializer

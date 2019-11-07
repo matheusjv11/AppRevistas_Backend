@@ -10,7 +10,7 @@ class Revista(models.Model):
     issn = models.CharField(max_length=20)
     nome_revista_portugues = models.CharField(max_length=100)
     nome_revista_english = models.CharField(max_length=100)
-    
+    #imagem = imagem field
     
     def __str__(self):
         return self.nome_revista_portugues
@@ -36,6 +36,7 @@ class Edicoes(models.Model):
     data_lancamento = models.DateField()
     revista = models.ForeignKey(Revista, on_delete=models.CASCADE)
     identifier = models.CharField(max_length=150)
+    #imagem = imagem field
 
     def __str__(self):
         return self.edicao_portugues
@@ -72,11 +73,14 @@ class Artigos(models.Model):
     def __str__(self):
         return self.titulo_portugues
 
+class Favoritos(models.Model):
 
+    artigo = models.ForeignKey(Artigos, on_delete=models.CASCADE)
 
 class Usuario(models.Model):
     
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
+    artigos_favoritos = models.ManyToManyField(Favoritos)
     
     
     def __str__(self):
@@ -84,10 +88,8 @@ class Usuario(models.Model):
 
 
 
-#class Favoritos(models.Model):
-    #Artigos favoritos
-    #Tem que mudar usuario para receber uma ManytoMany
-        #pass
+
+    
 
 class Avaliacoes(models.Model):
     # de 0 a 5 para artigo
@@ -104,6 +106,10 @@ class Noticias(models.Model):
     artigo_relacionado = models.ForeignKey(Artigos, on_delete=models.CASCADE)
     data_postagem = models.DateField()
     autor = models.PositiveIntegerField()
+    #imagem = image fild
+    #subtitulo
+    #link de artigo
+    #tirar artigo_relacionado, colocar revista_relacionada
 
     def __str__(self):
         return self.titulo
@@ -114,3 +120,4 @@ class Comentarios(models.Model):
     autor = models.PositiveIntegerField()
     noticia = models.ForeignKey(Noticias, on_delete=models.CASCADE)
     
+

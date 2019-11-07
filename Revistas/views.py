@@ -33,7 +33,7 @@ from rest_framework.generics import (
 
 from Revistas.models import Autores, Artigos,Categoria,Edicoes,Revista,Palavras_chave, Noticias, Comentarios
 from django.db.models import Q
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 #------ views de Usuarios --------
 
@@ -182,7 +182,7 @@ class EdicoesView(ListCreateAPIView):
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
     #Para a pesquisa, basta chama essa url com /?search=parametros
     filter_backends=[SearchFilter]
-    search_fields = ['id','edicao_portugues','edicao_english']
+    search_fields = ['id','edicao_portugues','edicao_english','data_lancamento']
 
 class EdicoesIDREVISTAView(ListCreateAPIView):
     #queryset = Edicoes.objects.all()
@@ -190,8 +190,8 @@ class EdicoesIDREVISTAView(ListCreateAPIView):
 
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
     #Para a pesquisa, basta chama essa url com /?search=parametros
-    filter_backends=[SearchFilter]
-    search_fields = ['edicao_portugues']
+    filter_backends=[SearchFilter, OrderingFilter]
+    search_fields = ['data_lancamento']
 
     def get_queryset(self):
         """

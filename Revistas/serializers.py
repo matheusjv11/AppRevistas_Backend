@@ -3,7 +3,7 @@ from rest_framework.serializers import CharField, EmailField
 from rest_framework.validators import ValidationError
 #from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from Revistas.models import Autores, Artigos,Categoria,Edicoes,Revista, Palavras_chave,Noticias,Comentarios
+from Revistas.models import Autores, Artigos,Categoria,Edicoes,Revista, Palavras_chave,Noticias,Comentarios, Usuario
 from django.db.models import Q
 
 
@@ -74,7 +74,6 @@ class UserLoginSerializer(serializers.ModelSerializer):
         
         data['TOKEN'] = 'SOME RANDOM TOKEN'
         return data
-
 
 class RevistaSerializer(serializers.ModelSerializer):
 

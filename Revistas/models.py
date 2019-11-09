@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.utils.timezone import now
 
 # Create your models here.
 class Revista(models.Model):
@@ -102,14 +102,14 @@ class Avaliacoes(models.Model):
 class Noticias(models.Model):
 
     titulo = models.CharField( max_length=150)
+    subtitulo = models.CharField(max_length=350, default="Not found")
     corpo  = models.TextField()
-    artigo_relacionado = models.ForeignKey(Artigos, on_delete=models.CASCADE)
-    data_postagem = models.DateField()
+    revista_relacionada = models.ForeignKey(Revista, on_delete=models.CASCADE, default=0)
+    data_postagem = models.DateTimeField(default=now, editable=False)
     autor = models.PositiveIntegerField()
-    #imagem = image fild
-    #subtitulo
-    #link de artigo
-    #tirar artigo_relacionado, colocar revista_relacionada
+    imagem = models.ImageField(upload_to=settings.MEDIA_ROOT, blank=True)
+    link_artigo = models.TextField(blank=True)
+    
 
     def __str__(self):
         return self.titulo

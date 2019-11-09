@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.conf.urls import include,url
 from rest_framework.authtoken import views
 from Revistas.views import UserView,RevistaView
-
+from django.conf import settings
 
 urlpatterns = [
     #path('api-auth/', include('rest_framework.urls')),
@@ -27,3 +27,5 @@ urlpatterns = [
     url(r'^api/', include("Revistas.urls", namespace='revista-api')),
     
 ]
+if settings.DEBUG: # new
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

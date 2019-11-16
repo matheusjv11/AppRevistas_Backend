@@ -14,6 +14,7 @@ from .serializers import (
     NoticiasSerializer,
     ComentariosSerializer,
     AvaliacaoSerializer,
+    UsuarioAppSerializer,
     )
 
 from rest_framework.response import Response
@@ -33,10 +34,11 @@ from rest_framework.generics import (
     RetrieveDestroyAPIView,
     )
 
-from Revistas.models import Autores, Avaliacoes,Artigos,Categoria,Edicoes,Revista,Palavras_chave, Noticias, Comentarios
+from Revistas.models import Autores, Avaliacoes,Artigos,Categoria,Edicoes,Revista,Palavras_chave, Noticias, Comentarios, Usuario
 from django.db.models import Q
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.parsers import JSONParser, MultiPartParser
+from django.shortcuts import get_object_or_404
 
 #------ views de Usuarios --------
 
@@ -330,3 +332,58 @@ class SingleAvaliacoesView(RetrieveAPIView):
 class AvaliacoesUpdateView(RetrieveUpdateAPIView):
     queryset = Avaliacoes.objects.all()
     serializer_class = AvaliacaoSerializer
+
+
+#----------- view Usuario APP --------------
+
+class UsuarioAppView(ListAPIView):
+
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioAppSerializer
+
+class UsuarioAppPorIdView(ListAPIView):
+
+    serializer_class = UsuarioAppSerializer
+    
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        user_id = self.kwargs['user_id']
+        return Usuario.objects.filter(user_id=user_id)
+
+class UsuarioAppAddFavsView(ListAPIView):
+
+    serializer_class = UsuarioAppSerializer
+    
+    def get_queryset(self):
+
+        usuario_id = self.kwargs.get('user_id')
+        artigo_id = self.kwargs.get('artigo_id')
+
+        usuario_OBJ = Usuario.objects.get(id=usuario_id)
+        artigo_OBJ  = Artigos.objects.get(id=artigo_id)
+
+
+        usuario_OBJ.artigos_favoritos.add(artigo_OBJ)
+        
+        return Usuario.objects.filter(id=usuario_id)
+    
+class UsuarioAppRemoveFavsView(ListAPIView):
+
+    serializer_class = UsuarioAppSerializer
+    
+    def get_queryset(self):
+
+        usuario_id = self.kwargs.get('user_id')
+        artigo_id = self.kwargs.get('artigo_id')
+
+        usuario_OBJ = Usuario.objects.get(id=usuario_id)
+        artigo_OBJ  = Artigos.objects.get(id=artigo_id)
+
+
+        usuario_OBJ.artigos_favoritos.remove(artigo_OBJ)
+        
+        return Usuario.objects.filter(id=usuario_id)
+

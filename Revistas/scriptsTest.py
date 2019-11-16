@@ -73,17 +73,38 @@ def salvar(titulo_artigo_br,titulo_artigo_en,autores,descricao_artigo_br,descric
         if tem_edicao:
             pass
         else:
-            #Para colocar uma FK, é preciso pesquisa o seu id na tabela sql, a pesquisa pode ser feita
-            #pesquisando por o nome de alguma coluna, e assim, puxa o id.
+            
+            #No caso de não conter o identifier da edição, vai verificar se existe outra edição com a mesma data de lançamento
+            edicao_sem_identifier = Edicoes.objects.filter(data_lancamento__startswith=data_lancamento_edicao).first()
+            
+            verificar_revista = Revista.objects.get(issn =issn_revista) 
 
-            revista_to_edicao =  Revista.objects.get(nome_revista_portugues =nome_revista) 
+            if edicao_sem_identifier:
+                     
 
-            nova_edicao = Edicoes(edicao_portugues=edicao, edicao_english=edicao_en,data_lancamento=data_lancamento_edicao,
-             revista = revista_to_edicao,identifier=identifier_edicao)
-            nova_edicao.save()
+                if edicao_sem_identifier.revista_id == verificar_revista.id :
+                    
+                    identifier_edicao = edicao_sem_identifier.identifier
+                    
+                else:
+                    revista_to_edicao =  Revista.objects.get(issn =issn_revista) 
+
+                    nova_edicao = Edicoes(edicao_portugues=edicao, edicao_english=edicao_en,data_lancamento=data_lancamento_edicao,
+                    revista = revista_to_edicao,identifier=identifier_edicao)
+                    nova_edicao.save()
+
+            else:  
+                #Para colocar uma FK, é preciso pesquisa o seu id na tabela sql, a pesquisa pode ser feita
+                #pesquisando por o nome de alguma coluna, e assim, puxa o id
+                revista_to_edicao =  Revista.objects.get(issn =issn_revista) 
+
+                nova_edicao = Edicoes(edicao_portugues=edicao, edicao_english=edicao_en,data_lancamento=data_lancamento_edicao,
+                revista = revista_to_edicao,identifier=identifier_edicao)
+                nova_edicao.save()
 
             #print(nova_edicao.revista.issn)
         
+        #Povoando tabela de categoria
         tem_categoria = Categoria.objects.filter(identifier__startswith=identifier_categoria)
 
         if tem_categoria:
@@ -221,6 +242,13 @@ def run():
             identifier_artigo = lista[x]['header']['identifier']
             identifier_edicao = lista[x]['metadata']['oai_dc:dc']['dc:source'][len(lista[x]['metadata']['oai_dc:dc']['dc:source'])-1]
             issn = lista[x]['metadata']['oai_dc:dc']['dc:source'][len(lista[x]['metadata']['oai_dc:dc']['dc:source'])-2]
+            
+            if len(identifier_edicao) < 14:
+                issn = identifier_edicao
+                identifier_edicao_IfErro = lista[x]['metadata']['oai_dc:dc']['dc:identifier'][len(lista[x]['metadata']['oai_dc:dc']['dc:identifier'])-1]
+                identifier_edicao_IfErro = identifier_edicao_IfErro.split('p')[0]
+                identifier_edicao = identifier_edicao_IfErro
+
             data_lancamento = lista[x]['metadata']['oai_dc:dc']['dc:date']
             
             palavras_chaves = ""

@@ -11,6 +11,10 @@ class Revista(models.Model):
     nome_revista_portugues = models.CharField(max_length=100)
     nome_revista_english = models.CharField(max_length=100)
     #imagem = imagem field
+    email = models.CharField(max_length=150,blank=True)
+    telefone = models.CharField(max_length=25,blank=True)
+    local = models.TextField(blank=True)
+    sobre = models.TextField(blank=True)
     
     def __str__(self):
         return self.nome_revista_portugues
@@ -38,8 +42,7 @@ class Edicoes(models.Model):
     identifier = models.CharField(max_length=150)
     #imagem = imagem field
 
-    def __str__(self):
-        return self.edicao_portugues
+   
 
 class Categoria(models.Model):
 
@@ -69,19 +72,11 @@ class Artigos(models.Model):
    
     
 
-
-    def __str__(self):
-        return self.titulo_portugues
-
-class Favoritos(models.Model):
-
-    artigo = models.ForeignKey(Artigos, on_delete=models.CASCADE)
-
 class Usuario(models.Model):
     
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
-    artigos_favoritos = models.ManyToManyField(Favoritos)
-    
+    artigos_favoritos = models.ManyToManyField(Artigos)
+    #administrador = models.BooleanField
     
     def __str__(self):
         return self.user
@@ -119,5 +114,6 @@ class Comentarios(models.Model):
     corpo = models.TextField()
     autor = models.PositiveIntegerField()
     noticia = models.ForeignKey(Noticias, on_delete=models.CASCADE)
+    data_postagem = models.DateTimeField(default=now, editable=False)
     
 

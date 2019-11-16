@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from Revistas.models import Autores, Artigos,Categoria,Edicoes,Revista, Palavras_chave,Noticias,Comentarios, Usuario, Avaliacoes
 from django.db.models import Q
 from django.core.files.base import ContentFile
+from rest_framework.authtoken.models import Token
 import base64
 
 User = get_user_model()
@@ -14,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = ('id', 'first_name','last_name' ,'email', 'password')
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -28,12 +29,18 @@ class UserSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        username = validated_data['username']
+        first_name = validated_data['first_name']
+        last_name = validated_data['last_name']
         email = validated_data['email']
         password = validated_data['password']
-        user_obj = User(username=username,email=email)
+        user_obj = User(first_name=first_name, last_name=last_name, email=email)
         user_obj.set_password(password)
         user_obj.save()
+
+        #Cria token e um usuario especifico da aplicação
+        Token.objects.get_or_create(user=user_obj)
+        usuario = Usuario(user=user_obj)
+        usuario.save()
         return validated_data
 
 class UserLoginSerializer(serializers.ModelSerializer):
@@ -189,4 +196,17 @@ class ComentariosSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'autor': {'read_only': True},
         }
+
+class ArtigosParaUsuarioSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Artigos
+        fields = ['id']
+
+class UsuarioAppSerializer(serializers.ModelSerializer):
+    
+    artigos_favoritos = ArtigosParaUsuarioSerializer(many=True, read_only=True)
+    class Meta:
+        model = Usuario
+        fields = '__all__'
 

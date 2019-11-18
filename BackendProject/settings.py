@@ -15,6 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'crispy_forms',
     
 ]
 
@@ -120,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'America/Sao_Paulo'
 
@@ -142,5 +144,18 @@ MEDIA_ROOT = 'media'
 import django_heroku
 django_heroku.settings(locals())
 
+OLD_PASSWORD_FIELD_ENABLED = True
 
+#EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'siru.uft@gmail.com'
+EMAIL_HOST_PASSWORD = 'gbapkwhvdjukvdbd'
+
+#DEFAULT_FROM_EMAIL = 'NÃO RESPONDA --- siru.uft@gmail.com'
+#SERVER_EMAIL = 'siru.uft@gmail.com'
+#EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 

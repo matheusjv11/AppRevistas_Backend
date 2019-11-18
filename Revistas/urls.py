@@ -101,7 +101,7 @@ urlpatterns = [
     #USUARIOS
     url(r'^usuarios', UserView.as_view(),name='usuarios'),
     url(r'^login', UserLoginView.as_view(),name='login'),
-    #url(r'^detail-noticias/(?P<pk>\d+)', SingleNoticiasView.as_view(),name='noticias-datail'),
+    url(r'^detail-user/(?P<pk>\d+)', SingleUserView.as_view(),name='User-datail'),
     #url(r'^update-noticias/(?P<pk>\d+)', NoticiasUpdateView.as_view(),name='noticias-update'),
     #url(r'^delete-noticias/(?P<pk>\d+)', NoticiasDeleteView.as_view(),name='noticias-delete'),
 

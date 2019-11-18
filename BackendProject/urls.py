@@ -19,12 +19,16 @@ from django.conf.urls import include,url
 from rest_framework.authtoken import views
 from Revistas.views import UserView,RevistaView
 from django.conf import settings
+from django.urls import path
+from django.contrib.auth import views as auth_views
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     #path('api-auth/', include('rest_framework.urls')),
     #path('api/', include('Revistas.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include("Revistas.urls", namespace='revista-api')),
+    path('rest-auth/', include('rest_auth.urls')),
     
 ]
 if settings.DEBUG: # new

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Revistas',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_auth',
     
 ]
 
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'BackendProject.urls'
@@ -58,7 +60,7 @@ ROOT_URLCONF = 'BackendProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,3 +141,6 @@ MEDIA_ROOT = 'media'
 # Configure Django App for Heroku.
 import django_heroku
 django_heroku.settings(locals())
+
+
+

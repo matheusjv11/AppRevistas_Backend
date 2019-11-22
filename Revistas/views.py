@@ -254,6 +254,7 @@ class ComentariosView(ListAPIView):
 
 class ComentariosCreateView(ListCreateAPIView):
 
+    queryset = Comentarios.objects.all()
     serializer_class = ComentariosSerializer
 
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
@@ -261,8 +262,8 @@ class ComentariosCreateView(ListCreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','corpo']
 
-    def perform_create(self, serializer):
-        serializer.save(autor=self.request.user.id)
+    #def perform_create(self, serializer):
+        #serializer.save(autor=self.request.user.id)
 
 @permission_classes((AllowAny, ))
 class SingleComentariosView(RetrieveAPIView):
@@ -290,6 +291,7 @@ class NoticiasView(ListAPIView):
 @permission_classes((AllowAny, ))
 class NoticiasCreateView(CreateAPIView):
     
+    queryset = Noticias.objects.all()
     serializer_class = NoticiasSerializer
     #parser_classes = (MultiPartParser, JSONParser)
 
@@ -298,8 +300,6 @@ class NoticiasCreateView(CreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','titulo','corpo','autor']
 
-    def perform_create(self, serializer):
-        serializer.save(autor=self.request.user.id)
 
 
 
@@ -325,17 +325,12 @@ class AvaliacoesView(ListAPIView):
     #filter_backends=[SearchFilter]
     #search_fields = ['id','nota','id_','autor']
 
+
 class AvaliacoesCreateView(ListCreateAPIView):
     
+    queryset = Avaliacoes.objects.all()
     serializer_class = AvaliacaoSerializer
-
-    #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
-    #Para a pesquisa, basta chama essa url com /?search=parametros
-    #filter_backends=[SearchFilter]
-    #search_fields = ['id','nota','id_','autor']
-
-    def perform_create(self, serializer):
-        serializer.save(id_usuario=self.request.user.id)
+    
 
 @permission_classes((AllowAny, ))
 class AvaliacoesNOTAView(ListAPIView):

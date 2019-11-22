@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from .serializers import (
     UserSerializer,
     UserLoginSerializer,
+    UserUpdateSerializer,
     RevistaSerializer,
     AutoresSerializer,
     ArtigosSerializer,
@@ -39,39 +40,38 @@ from django.db.models import Q
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.parsers import JSONParser, MultiPartParser
 from django.shortcuts import get_object_or_404
-
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import authentication_classes, permission_classes
 #------ views de Usuarios --------
 
 User = get_user_model()
+
+@permission_classes((AllowAny, ))
 class UserView(ListCreateAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    filter_backends=[SearchFilter]
+    search_fields = ['username']
 
 
+@permission_classes((AllowAny, ))
 class SingleUserView(RetrieveAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class UserLoginView(APIView):
-    
-    permission_classes = [AllowAny]
-    serializer_class = UserLoginSerializer
 
-    def POST(self, request, *args, **kwargs):
-        data = request.data
-        serializer = UserLoginSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            new_data = serializer.data
-            return Response(new_data, status=HTTP_200_OK)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+class UserUpdateView(RetrieveUpdateAPIView):
 
+    queryset = User.objects.all()
+    serializer_class = UserUpdateSerializer
 
 #------ views de Revistas--------
 
-class RevistaView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class RevistaView(ListAPIView):
     queryset = Revista.objects.all()
     serializer_class = RevistaSerializer
 
@@ -80,6 +80,7 @@ class RevistaView(ListCreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','issn','nome_revista_portugues','nome_revista_english']
 
+@permission_classes((AllowAny, ))
 class SingleRevistaView(RetrieveAPIView):
     queryset = Revista.objects.all()
     serializer_class = RevistaSerializer
@@ -94,7 +95,8 @@ class RevistaUpdateView(RetrieveUpdateAPIView):
 
 #----------- view Autores --------------
 
-class AutoresView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class AutoresView(ListAPIView):
     queryset = Autores.objects.all()
     serializer_class = AutoresSerializer
 
@@ -103,6 +105,7 @@ class AutoresView(ListCreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','nome_autor']
 
+@permission_classes((AllowAny, ))
 class SingleAutoresView(RetrieveAPIView):
     queryset = Autores.objects.all()
     serializer_class = AutoresSerializer
@@ -111,13 +114,11 @@ class AutoresUpdateView(RetrieveUpdateAPIView):
     queryset = Autores.objects.all()
     serializer_class = AutoresSerializer
 
-"""class AutoresDeleteView(RetrieveDestroyAPIView):
-    queryset = Autores.objects.all()
-    serializer_class = AutoresSerializer"""
 
 #----------- view Artigos --------------
 
-class ArtigosView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class ArtigosView(ListAPIView):
     queryset = Artigos.objects.all()
     serializer_class = ArtigosSerializer
 
@@ -126,7 +127,8 @@ class ArtigosView(ListCreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','titulo_portugues','titulo_english','descricao_portugues','descricao_english','categoria_id__nome_categoria']
 
-class ArtigosBYEDICOESIDView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class ArtigosBYEDICOESIDView(ListAPIView):
     #queryset = Artigos.objects.all()
     serializer_class = ArtigosSerializer
 
@@ -143,6 +145,7 @@ class ArtigosBYEDICOESIDView(ListCreateAPIView):
         edicao_id = self.kwargs['edicao_id']
         return Artigos.objects.filter(edicao_id__id=edicao_id)
 
+@permission_classes((AllowAny, ))
 class SingleArtigosView(RetrieveAPIView):
     queryset = Artigos.objects.all()
     serializer_class = ArtigosSerializer
@@ -151,13 +154,11 @@ class ArtigosUpdateView(RetrieveUpdateAPIView):
     queryset = Artigos.objects.all()
     serializer_class = ArtigosSerializer
 
-"""class ArtigosDeleteView(RetrieveDestroyAPIView):
-    queryset = Artigos.objects.all()
-    serializer_class = ArtigosSerializer"""
 
 #----------- view Categoria --------------
 
-class CategoriaView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class CategoriaView(ListAPIView):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
 
@@ -166,6 +167,7 @@ class CategoriaView(ListCreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','nome_categoria']
 
+@permission_classes((AllowAny, ))
 class SingleCategoriaView(RetrieveAPIView):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
@@ -174,13 +176,11 @@ class CategoriaUpdateView(RetrieveUpdateAPIView):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
 
-"""class CategoriaDeleteView(RetrieveDestroyAPIView):
-    queryset = Categoria.objects.all()
-    serializer_class = CategoriaSerializer"""
 
 #----------- view Edicoes --------------
 
-class EdicoesView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class EdicoesView(ListAPIView):
     queryset = Edicoes.objects.all()
     serializer_class = EdicoesSerializer
 
@@ -189,6 +189,7 @@ class EdicoesView(ListCreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','edicao_portugues','edicao_english','data_lancamento']
 
+@permission_classes((AllowAny, ))
 class EdicoesIDREVISTAView(ListCreateAPIView):
     #queryset = Edicoes.objects.all()
     serializer_class = EdicoesSerializer
@@ -206,6 +207,7 @@ class EdicoesIDREVISTAView(ListCreateAPIView):
         revista_id = self.kwargs['revista_id']
         return Edicoes.objects.filter(revista_id__id=revista_id)
 
+@permission_classes((AllowAny, ))
 class SingleEdicoesView(RetrieveAPIView):
     queryset = Edicoes.objects.all()
     serializer_class = EdicoesSerializer
@@ -214,13 +216,12 @@ class EdicoesUpdateView(RetrieveUpdateAPIView):
     queryset = Edicoes.objects.all()
     serializer_class = EdicoesSerializer
 
-"""class CategoriaDeleteView(DestroyAPIView):
-    queryset = Categoria.objects.all()
-    serializer_class = CategoriaSerializer"""
+
 
 #----------- view Palavras-chave --------------
 
-class PalavrasView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class PalavrasView(ListAPIView):
     queryset = Palavras_chave.objects.all()
     serializer_class = PalavrasChaveSerializer
 
@@ -229,6 +230,7 @@ class PalavrasView(ListCreateAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','assunto']
 
+@permission_classes((AllowAny, ))
 class SinglePalavrasView(RetrieveAPIView):
     queryset = Palavras_chave.objects.all()
     serializer_class = PalavrasChaveSerializer
@@ -237,14 +239,21 @@ class PalavrasUpdateView(RetrieveUpdateAPIView):
     queryset = Palavras_chave.objects.all()
     serializer_class = PalavrasChaveSerializer
 
-"""class CategoriaDeleteView(DestroyAPIView):
-    queryset = Categoria.objects.all()
-    serializer_class = CategoriaSerializer"""
-
 #----------- view Comentario --------------
 
-class ComentariosView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class ComentariosView(ListAPIView):
     queryset = Comentarios.objects.all()
+    serializer_class = ComentariosSerializer
+
+    #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
+    #Para a pesquisa, basta chama essa url com /?search=parametros
+    filter_backends=[SearchFilter]
+    search_fields = ['id','corpo']
+
+
+class ComentariosCreateView(ListCreateAPIView):
+
     serializer_class = ComentariosSerializer
 
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
@@ -255,6 +264,7 @@ class ComentariosView(ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(autor=self.request.user.id)
 
+@permission_classes((AllowAny, ))
 class SingleComentariosView(RetrieveAPIView):
     queryset = Comentarios.objects.all()
     serializer_class = ComentariosSerializer
@@ -263,16 +273,25 @@ class ComentariosUpdateView(RetrieveUpdateAPIView):
     queryset = Comentarios.objects.all()
     serializer_class = ComentariosSerializer
 
-"""class ComentariosDeleteView(RetrieveDestroyAPIView):
-    queryset = Comentarios.objects.all()
-    serializer_class = ComentariosSerializer"""
 
 #----------- view Noticias --------------
 
-class NoticiasView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class NoticiasView(ListAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasSerializer
     parser_classes = (MultiPartParser, JSONParser)
+
+    #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
+    #Para a pesquisa, basta chama essa url com /?search=parametros
+    filter_backends=[SearchFilter]
+    search_fields = ['id','titulo','corpo','autor']
+
+@permission_classes((AllowAny, ))
+class NoticiasCreateView(CreateAPIView):
+    
+    serializer_class = NoticiasSerializer
+    #parser_classes = (MultiPartParser, JSONParser)
 
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
     #Para a pesquisa, basta chama essa url com /?search=parametros
@@ -284,7 +303,7 @@ class NoticiasView(ListCreateAPIView):
 
 
 
-
+@permission_classes((AllowAny, ))
 class SingleNoticiasView(RetrieveAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasSerializer
@@ -293,16 +312,21 @@ class NoticiasUpdateView(RetrieveUpdateAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasSerializer
 
-    
- 
-"""class NoticiasDeleteView(RetrieveDestroyAPIView):
-    queryset = Noticias.objects.all()
-    serializer_class = NoticiasSerializer """
 
 #----------- view Avaliações --------------
 
-class AvaliacoesView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class AvaliacoesView(ListAPIView):
     queryset = Avaliacoes.objects.all()
+    serializer_class = AvaliacaoSerializer
+
+    #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
+    #Para a pesquisa, basta chama essa url com /?search=parametros
+    #filter_backends=[SearchFilter]
+    #search_fields = ['id','nota','id_','autor']
+
+class AvaliacoesCreateView(ListCreateAPIView):
+    
     serializer_class = AvaliacaoSerializer
 
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
@@ -313,7 +337,8 @@ class AvaliacoesView(ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(id_usuario=self.request.user.id)
 
-class AvaliacoesNOTAView(ListCreateAPIView):
+@permission_classes((AllowAny, ))
+class AvaliacoesNOTAView(ListAPIView):
     #queryset = Edicoes.objects.all()
     serializer_class = AvaliacaoSerializer
     
@@ -325,6 +350,7 @@ class AvaliacoesNOTAView(ListCreateAPIView):
         nota = self.kwargs['nota']
         return Edicoes.objects.filter(nota=nota)
 
+@permission_classes((AllowAny, ))
 class SingleAvaliacoesView(RetrieveAPIView):
     queryset = Avaliacoes.objects.all()
     serializer_class = AvaliacaoSerializer
@@ -336,11 +362,13 @@ class AvaliacoesUpdateView(RetrieveUpdateAPIView):
 
 #----------- view Usuario APP --------------
 
+@permission_classes((AllowAny, ))
 class UsuarioAppView(ListAPIView):
 
     queryset = Usuario.objects.all()
     serializer_class = UsuarioAppSerializer
 
+@permission_classes((AllowAny, ))
 class UsuarioAppPorIdView(ListAPIView):
 
     serializer_class = UsuarioAppSerializer

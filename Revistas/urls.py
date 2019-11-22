@@ -1,8 +1,8 @@
 
 from .views import (
-    UserView,
-    UserLoginView, 
+    UserView, 
     SingleUserView,
+    UserUpdateView,
     RevistaView, 
     SingleRevistaView,
     RevistaUpdateView, 
@@ -24,12 +24,15 @@ from .views import (
     PalavrasUpdateView,
     SinglePalavrasView,
     ComentariosView,
+    ComentariosCreateView,
     ComentariosUpdateView,
     SingleComentariosView,
     NoticiasUpdateView,
     NoticiasView,
+    NoticiasCreateView,
     SingleNoticiasView,
     AvaliacoesView,
+    AvaliacoesCreateView,
     AvaliacoesUpdateView,
     AvaliacoesNOTAView,
     SingleAvaliacoesView,
@@ -83,27 +86,29 @@ urlpatterns = [
 
     #COMENTARIOS
     url(r'^comentarios', ComentariosView.as_view(),name='comentarios'),
+    url(r'^create-comentarios/', ComentariosCreateView.as_view(),name='comentarios-create'),
     url(r'^detail-comentarios/(?P<pk>\d+)', SingleComentariosView.as_view(),name='comentarios-datail'),
     url(r'^update-comentarios/(?P<pk>\d+)', ComentariosUpdateView.as_view(),name='comentarios-update'),
     
 
     #NOTICIAS
     url(r'^noticias', NoticiasView.as_view(),name='noticias'),
+    url(r'^create-noticias/', NoticiasCreateView.as_view(),name='noticias-create'),
     url(r'^detail-noticias/(?P<pk>\d+)', SingleNoticiasView.as_view(),name='noticias-datail'),
     url(r'^update-noticias/(?P<pk>\d+)', NoticiasUpdateView.as_view(),name='noticias-update'),
    
     #AVALIACOES
     url(r'^avaliacoes', AvaliacoesView.as_view(),name='avaliacoes'),
     url('^get-avaliacoespornota/(?P<nota>.+)/$', AvaliacoesNOTAView.as_view()),
+    url(r'^create-avaliacoes/', AvaliacoesCreateView.as_view(),name='avaliacoes-create'),
     url(r'^detail-avaliacoes/(?P<pk>\d+)', SingleAvaliacoesView.as_view(),name='avaliacoes-datail'),
     url(r'^update-avaliacoes/(?P<pk>\d+)', AvaliacoesUpdateView.as_view(),name='avaliacoes-update'),
 
     #USUARIOS
     url(r'^usuarios', UserView.as_view(),name='usuarios'),
-    url(r'^login', UserLoginView.as_view(),name='login'),
     url(r'^detail-user/(?P<pk>\d+)', SingleUserView.as_view(),name='User-datail'),
-    #url(r'^update-noticias/(?P<pk>\d+)', NoticiasUpdateView.as_view(),name='noticias-update'),
-    #url(r'^delete-noticias/(?P<pk>\d+)', NoticiasDeleteView.as_view(),name='noticias-delete'),
+    url(r'^update-user/(?P<pk>\d+)', UserUpdateView.as_view(),name='User-update'),
+   
 
     #USUARIOS APP
     url(r'^app-usuarios', UsuarioAppView.as_view(),name='usuarios'),

@@ -8,6 +8,8 @@ from django.db.models import Q
 from django.core.files.base import ContentFile
 from rest_framework.authtoken.models import Token
 import base64
+#from drf_extra_fields.fields import Base64ImageField
+#from django_rest_framework_base64_fields import Base64FileField
 
 User = get_user_model()
 
@@ -43,6 +45,15 @@ class UserSerializer(serializers.ModelSerializer):
         usuario = Usuario(user=user_obj)
         usuario.save()
         return validated_data
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id','username','first_name','last_name' )
+        extra_kwargs = {
+            'username': {'read_only': True},
+        }
 
 class UserLoginSerializer(serializers.ModelSerializer):
 
@@ -179,7 +190,8 @@ class Base64ImageField(serializers.ImageField):
         return super(Base64ImageField, self).from_native(data)
 
 class NoticiasSerializer(serializers.ModelSerializer):
-    imagem = Base64ImageField(allow_null=True)
+
+    imagem = Base64ImageField()
     class Meta:
         model = Noticias
         fields = ('id', 'titulo', 'subtitulo','corpo','data_postagem','autor','revista_relacionada', 'link_artigo','imagem')
@@ -210,4 +222,7 @@ class UsuarioAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'
+        extra_kwargs = {
+            'administrador': {'read_only': True},
+        }
 

@@ -8,3 +8,4 @@ Pillow==6.2.1
 six==1.13.0
 django-rest-auth==0.9.5
 django-crispy-forms==1.8.0
+django-extra-fields==2.0.1

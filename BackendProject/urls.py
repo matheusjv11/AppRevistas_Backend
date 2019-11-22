@@ -26,6 +26,7 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
     #path('api-auth/', include('rest_framework.urls')),
     #path('api/', include('Revistas.urls')),
+    #Endpoints para rest-auth https://django-rest-auth.readthedocs.io/en/latest/api_endpoints.html#social-media-authentication
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include("Revistas.urls", namespace='revista-api')),
     path('rest-auth/', include('rest_auth.urls')),

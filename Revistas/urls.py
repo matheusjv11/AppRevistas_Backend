@@ -39,7 +39,11 @@ from .views import (
     UsuarioAppView,
     UsuarioAppPorIdView,
     UsuarioAppAddFavsView,
-    UsuarioAppRemoveFavsView
+    UsuarioAppRemoveFavsView,
+    UsuarioAppAddAdminView,
+    UsuarioAppRemoveAdminView,
+    UsuarioAppAddRevistasAdminView,
+    UsuarioAppRemoveRevistasAdminView,
      )
 
 from django.contrib import admin
@@ -115,6 +119,10 @@ urlpatterns = [
     url('^get-usuariosporid/(?P<user_id>.+)/$', UsuarioAppPorIdView.as_view()),
     url('^add-artigofavoritousuario/(?P<user_id>.+)/(?P<artigo_id>.+)', UsuarioAppAddFavsView.as_view()),
     url('^remove-artigofavoritousuario/(?P<user_id>.+)/(?P<artigo_id>.+)', UsuarioAppRemoveFavsView.as_view()),
+    url('^add-administrador/(?P<user_id>.+)/$', UsuarioAppAddAdminView.as_view()),
+    url('^remove-administrador/(?P<user_id>.+)/$', UsuarioAppRemoveAdminView.as_view()),
+    url('^add-revistaadministrador/(?P<user_id>.+)/(?P<revista_id>.+)', UsuarioAppAddRevistasAdminView.as_view()),
+    url('^remove-revistaadministrador/(?P<user_id>.+)/(?P<revista_id>.+)', UsuarioAppRemoveRevistasAdminView.as_view()),
     #url(r'^detail-noticias/(?P<pk>\d+)', SingleNoticiasView.as_view(),name='noticias-datail'),
     #url(r'^update-noticias/(?P<pk>\d+)', NoticiasUpdateView.as_view(),name='noticias-update'),
     #url(r'^delete-noticias/(?P<pk>\d+)', NoticiasDeleteView.as_view(),name='noticias-delete'),

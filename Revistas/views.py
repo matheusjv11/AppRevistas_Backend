@@ -42,6 +42,9 @@ from rest_framework.parsers import JSONParser, MultiPartParser
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import authentication_classes, permission_classes
+import json
+from rest_framework import status
+
 #------ views de Usuarios --------
 
 User = get_user_model()
@@ -95,7 +98,7 @@ class RevistaUpdateView(RetrieveUpdateAPIView):
 
 #----------- view Autores --------------
 
-@permission_classes((AllowAny, ))
+
 class AutoresView(ListAPIView):
     queryset = Autores.objects.all()
     serializer_class = AutoresSerializer
@@ -288,7 +291,7 @@ class NoticiasView(ListAPIView):
     filter_backends=[SearchFilter]
     search_fields = ['id','titulo','corpo','autor']
 
-@permission_classes((AllowAny, ))
+
 class NoticiasCreateView(CreateAPIView):
     
     queryset = Noticias.objects.all()
@@ -410,3 +413,68 @@ class UsuarioAppRemoveFavsView(ListAPIView):
         
         return Usuario.objects.filter(id=usuario_id)
 
+
+class UsuarioAppAddAdminView(ListAPIView):
+
+    serializer_class = UsuarioAppSerializer
+    
+    def get_queryset(self):
+
+        usuario_id = self.kwargs.get('user_id')
+        usuario_OBJ = Usuario.objects.get(id=usuario_id)    
+        usuario_OBJ.administrador = True
+        usuario_OBJ.save()
+        
+        return Usuario.objects.filter(id=usuario_id)
+
+
+class UsuarioAppRemoveAdminView(ListAPIView):
+
+    serializer_class = UsuarioAppSerializer
+    
+    def get_queryset(self):
+
+        usuario_id = self.kwargs.get('user_id')
+        usuario_OBJ = Usuario.objects.get(id=usuario_id)    
+        usuario_OBJ.administrador = False
+        usuario_OBJ.save()
+        
+        return Usuario.objects.filter(id=usuario_id)
+
+
+class UsuarioAppAddRevistasAdminView(ListAPIView):
+
+    serializer_class = UsuarioAppSerializer
+    
+    def get_queryset(self):
+
+        usuario_id = self.kwargs.get('user_id')
+        revista_id = self.kwargs.get('revista_id')
+
+        usuario_OBJ = Usuario.objects.get(id=usuario_id)
+        if usuario_OBJ.administrador == False:
+            return "render(HTTP_400_BAD_REQUEST, template_name=HTTP_200_OK)"
+
+        revista_OBJ = Revista.objects.get(id=revista_id)
+        usuario_OBJ.gerencia_revista.add(revista_OBJ)
+        
+        return Usuario.objects.filter(id=usuario_id)
+
+
+class UsuarioAppRemoveRevistasAdminView(ListAPIView):
+
+    serializer_class = UsuarioAppSerializer
+    
+    def get_queryset(self):
+
+        usuario_id = self.kwargs.get('user_id')
+        revista_id = self.kwargs.get('revista_id')
+
+        usuario_OBJ = Usuario.objects.get(id=usuario_id)
+        if usuario_OBJ.administrador == False:
+            return "render(HTTP_400_BAD_REQUEST, template_name=HTTP_200_OK)"
+
+        revista_OBJ = Revista.objects.get(id=revista_id)
+        usuario_OBJ.gerencia_revista.remove(revista_OBJ)
+        
+        return Usuario.objects.filter(id=usuario_id)

@@ -77,8 +77,7 @@ class Usuario(models.Model):
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     artigos_favoritos = models.ManyToManyField(Artigos)
     administrador = models.BooleanField(default=False)
-    #if admin
-        #gerencia_revista = Manytomany (Revista)
+    gerencia_revista = models.ManyToManyField(Revista)
     
     def __str__(self):
         return self.user

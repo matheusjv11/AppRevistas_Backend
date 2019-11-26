@@ -36,7 +36,7 @@ edicao_en
 #-------AVISOS-------"
 
 """
-- Se reiniciar o banco de dados do zero, colocar uma tupla 'Not found' em : Revista, Edicoes e Categoria.
+- Se reiniciar o banco de dados do zero, colocar uma tupla 'Not found' em : Revista e Categoria.
 Todos os dados dessa tupla tem que ser 'Not found'.
 """
 #----------------------------------------------------------------
@@ -67,11 +67,7 @@ def salvar(titulo_artigo_br,titulo_artigo_en,autores,descricao_artigo_br,descric
                 if len(issn_revista)<16:
                     nova_revista = Revista(issn=issn_revista, nome_revista_portugues=nome_revista, nome_revista_english=nome_revista_en)
                     nova_revista.save()
-            
-
-        
-        if identifier_artigo == 'oai:ojs.revista.uft.edu.br:article/6771':
-            print(identifier_edicao)
+    
         
         
         #Povoando tabela de edição
@@ -85,9 +81,10 @@ def salvar(titulo_artigo_br,titulo_artigo_en,autores,descricao_artigo_br,descric
 
             
             #No caso de não conter o identifier da edição, vai verificar se existe outra edição com a mesma data de lançamento
-            edicao_sem_identifier = Edicoes.objects.filter(data_lancamento__startswith=data_lancamento_edicao).first()
-            
             verificar_revista = Revista.objects.get(issn =issn_revista) 
+            edicao_sem_identifier = Edicoes.objects.filter(edicao_portugues=edicao,revista=verificar_revista).first()
+            
+            
 
             if edicao_sem_identifier:
                      
@@ -121,7 +118,7 @@ def salvar(titulo_artigo_br,titulo_artigo_en,autores,descricao_artigo_br,descric
             #print(nova_edicao.revista.issn)
         
         #Povoando tabela de categoria
-        tem_categoria = Categoria.objects.filter(identifier__startswith=identifier_categoria)
+        tem_categoria = Categoria.objects.filter(identifier__startswith=identifier_categoria).first()
 
         if tem_categoria:
             pass
@@ -132,13 +129,24 @@ def salvar(titulo_artigo_br,titulo_artigo_en,autores,descricao_artigo_br,descric
             nova_categoria.save()
 
         #Povoando a tabela de artigos
+
         try:
             edicao_to_artigo = Edicoes.objects.get(identifier=identifier_edicao)
+
+            if identifier_edicao == 'Not found':
+                revista_to_except = Revista.objects.get(issn = issn_revista)
+                edicao_to_artigo = Edicoes.objects.get(edicao_portugues=edicao,revista=revista_to_except)
+
             
         except:
-            edicao_to_artigo = Edicoes.objects.filter(identifier='Not found').first()
+            #passar a data de lancamento e o id da revista
+            revista_to_except = Revista.objects.get(issn = issn_revista)
+            edicao_to_artigo = Edicoes.objects.filter(data_lancamento=data_lancamento_edicao,revista=revista_to_except).first()
         
-        categoria_to_artigo = Categoria.objects.get(identifier=identifier_categoria)
+        try:
+            categoria_to_artigo = Categoria.objects.get(identifier=identifier_categoria)
+        except:
+            categoria_to_artigo = Categoria.objects.get(identifier='Not found')
 
         novo_artigo = Artigos(titulo_portugues=titulo_artigo_br, titulo_english= titulo_artigo_en,descricao_portugues=descricao_artigo_br,descricao_english= descricao_artigo_en,
                               identifier = identifier_artigo, link_pdf = link_pdf_artigo, edicao = edicao_to_artigo, categoria = categoria_to_artigo)
@@ -186,28 +194,31 @@ def revista_escolhida(id):
     site_categorias = ""
 
     if id == 1:
-
+        #Revista Observatorio
         site_inicial = 'https://sistemas.uft.edu.br/periodicos/index.php/observatorio/oai?verb=ListRecords&metadataPrefix=oai_dc'
         proximo_site = 'https://sistemas.uft.edu.br/periodicos/index.php/observatorio/oai?verb=ListRecords&resumptionToken='
         site_categorias  = 'https://sistemas.uft.edu.br/periodicos/index.php/observatorio/oai?verb=ListSets'
     
     elif id == 2:
         
+        #Revista Desafios
         site_inicial = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListRecords&metadataPrefix=oai_dc'
         proximo_site = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListRecords&resumptionToken='
         site_categorias  = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListSets'
  
     
     elif id == 3:
-        #
-        site_inicial = 'https://sistemas.uft.edu.br/periodicos/index.php/atura/oai?verb=ListRecords&metadataPrefix=oai_dc'
-        proximo_site = 'https://sistemas.uft.edu.br/periodicos/index.php/atura/oai?verb=ListRecords&resumptionToken='
-        site_categorias  = 'https://sistemas.uft.edu.br/periodicos/index.php/atura/oai?verb=ListSets'
+
+        #Revista Campo
+        site_inicial = 'https://sistemas.uft.edu.br/periodicos/index.php/campo/oai?verb=ListRecords&metadataPrefix=oai_dc'
+        proximo_site = 'https://sistemas.uft.edu.br/periodicos/index.php/campo/oai?verb=ListRecords&resumptionToken='
+        site_categorias  = 'https://sistemas.uft.edu.br/periodicos/index.php/campo/oai?verb=ListSets'
  
     
     elif id < 1 or id > 3:
         
         print("Id de revista invalido")
+        quit()
 
 
 
@@ -260,6 +271,7 @@ def run(revista_OAI):
 
         
         for x in range(len(lista)): 
+
             print(lista[x]['header']['identifier'])
 
             if '@status' in lista[x]['header']:
@@ -355,18 +367,20 @@ def run(revista_OAI):
             if type(revista) is list:
                 z=0
                 for v in range(len(revista)):
-                
-                    language = revista[v]['@xml:lang']
-                    
-                    if language == 'pt-BR':
-                            revista_br = revista[v]['#text']
-                            z+=1
-                    if language == 'en-US':
-                            revista_en = revista[v]['#text']
-                            z+=1
-                    if z == 2:
-                        break
+                    try:
+                        language = revista[v]['@xml:lang']
                         
+                        if language == 'pt-BR':
+                                revista_br = revista[v]['#text']
+                                z+=1
+                        if language == 'en-US':
+                                revista_en = revista[v]['#text']
+                                z+=1
+                        if z == 2:
+                            break
+                    except:                        
+                        revista_br = revista[0]['#text']
+                        revista_en = 'Not found'
                             
             else:
                 revista_br = revista['#text']
@@ -378,8 +392,13 @@ def run(revista_OAI):
             sobre_edicao = revista_br.split(';')[1]
             edicao = sobre_edicao.split(':')[0]
 
-            nome_revista_en = revista_en.split(';')[0]
-            sobre_edicao_en = revista_en.split(';')[1]
+            if revista_en == 'Not found':
+                nome_revista_en = 'Not found'
+                sobre_edicao_en = 'Not found'
+            else:
+                nome_revista_en = revista_en.split(';')[0]
+                sobre_edicao_en = revista_en.split(';')[1]
+
             edicao_en = sobre_edicao_en.split(':')[0]
 
             if 'dc:relation' in lista[x]['metadata']['oai_dc:dc']:
@@ -435,7 +454,9 @@ def run(revista_OAI):
             
             break                                                                         
 
-"""def post():
-   revista_to_categoria =  Revista.objects.filter(issn = 0).first()
+def post():
+
+   revista_to_categoria =  Revista(issn=0, nome_revista_portugues='Not found', nome_revista_english='Not found')
+   revista_to_categoria.save()
    nova_categoria = Categoria(nome_categoria='Not found', revista = revista_to_categoria, identifier = 'Not found')
-   nova_categoria.save()"""
+   nova_categoria.save()

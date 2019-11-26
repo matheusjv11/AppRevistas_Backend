@@ -10,7 +10,7 @@ class Revista(models.Model):
     issn = models.CharField(max_length=20)
     nome_revista_portugues = models.CharField(max_length=100)
     nome_revista_english = models.CharField(max_length=100)
-    #imagem = imagem field
+    imagem = models.ImageField(upload_to=settings.MEDIA_ROOT, blank=True)
     email = models.CharField(max_length=150,blank=True)
     telefone = models.CharField(max_length=25,blank=True)
     local = models.TextField(blank=True)
@@ -40,7 +40,7 @@ class Edicoes(models.Model):
     data_lancamento = models.DateField()
     revista = models.ForeignKey(Revista, on_delete=models.CASCADE)
     identifier = models.CharField(max_length=150)
-    #imagem = imagem field
+    imagem = models.ImageField(upload_to=settings.MEDIA_ROOT, blank=True)
 
    
 

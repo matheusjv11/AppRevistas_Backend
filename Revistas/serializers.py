@@ -158,8 +158,8 @@ class Base64ImageField(serializers.ImageField):
 
         return super(Base64ImageField, self).from_native(data)
 
-class NoticiasSerializer(serializers.ModelSerializer):
-
+class NoticiasCreateSerializer(serializers.ModelSerializer):
+    #revista_relacionada = RevistaSerializer(many=False, read_only=True)
     imagem = Base64ImageField()
     class Meta:
         model = Noticias
@@ -168,7 +168,15 @@ class NoticiasSerializer(serializers.ModelSerializer):
             'autor': {'read_only': False},
         }
 
-
+class NoticiasViewSerializer(serializers.ModelSerializer):
+    revista_relacionada = RevistaSerializer(many=False, read_only=True)
+    imagem = Base64ImageField()
+    class Meta:
+        model = Noticias
+        fields = ('id', 'titulo', 'subtitulo','corpo','data_postagem','autor','revista_relacionada', 'link_artigo','imagem')
+        extra_kwargs = {
+            'autor': {'read_only': False},
+        }
 
 class ComentariosSerializer(serializers.ModelSerializer):
     

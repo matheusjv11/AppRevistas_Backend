@@ -12,7 +12,8 @@ from .serializers import (
     CategoriaSerializer,
     EdicoesSerializer,
     PalavrasChaveSerializer,
-    NoticiasSerializer,
+    NoticiasViewSerializer,
+    NoticiasCreateSerializer,
     ComentariosSerializer,
     AvaliacaoSerializer,
     UsuarioAppSerializer,
@@ -98,7 +99,7 @@ class RevistaUpdateView(RetrieveUpdateAPIView):
 
 #----------- view Autores --------------
 
-
+@permission_classes((AllowAny, ))
 class AutoresView(ListAPIView):
     queryset = Autores.objects.all()
     serializer_class = AutoresSerializer
@@ -283,7 +284,7 @@ class ComentariosUpdateView(RetrieveUpdateAPIView):
 @permission_classes((AllowAny, ))
 class NoticiasView(ListAPIView):
     queryset = Noticias.objects.all()
-    serializer_class = NoticiasSerializer
+    serializer_class = NoticiasViewSerializer
     parser_classes = (MultiPartParser, JSONParser)
 
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
@@ -295,7 +296,7 @@ class NoticiasView(ListAPIView):
 class NoticiasCreateView(CreateAPIView):
     
     queryset = Noticias.objects.all()
-    serializer_class = NoticiasSerializer
+    serializer_class = NoticiasCreateSerializer
     #parser_classes = (MultiPartParser, JSONParser)
 
     #Essa parte indica que a pode ser retornado só os dados pesquisados por esses parametros
@@ -309,11 +310,11 @@ class NoticiasCreateView(CreateAPIView):
 @permission_classes((AllowAny, ))
 class SingleNoticiasView(RetrieveAPIView):
     queryset = Noticias.objects.all()
-    serializer_class = NoticiasSerializer
+    serializer_class = NoticiasViewSerializer
 
 class NoticiasUpdateView(RetrieveUpdateAPIView):
     queryset = Noticias.objects.all()
-    serializer_class = NoticiasSerializer
+    serializer_class = NoticiasViewSerializer
 
 
 #----------- view Avaliações --------------

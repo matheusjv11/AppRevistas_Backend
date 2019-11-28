@@ -254,6 +254,19 @@ class ComentariosView(ListAPIView):
     #Para a pesquisa, basta chama essa url com /?search=parametros
     filter_backends=[SearchFilter]
     search_fields = ['id','corpo']
+    
+@permission_classes((AllowAny, ))
+class ComentariosNoticiaView(ListCreateAPIView):
+    
+    serializer_class = ComentariosSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        noticia_id = self.kwargs['noticia_id']
+        return Comentarios.objects.filter(noticia_id__id=noticia_id)
 
 
 class ComentariosCreateView(ListCreateAPIView):
@@ -291,6 +304,7 @@ class NoticiasView(ListAPIView):
     #Para a pesquisa, basta chama essa url com /?search=parametros
     filter_backends=[SearchFilter]
     search_fields = ['id','titulo','corpo','autor']
+
 
 
 class NoticiasCreateView(CreateAPIView):

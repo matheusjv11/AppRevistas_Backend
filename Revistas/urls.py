@@ -24,6 +24,7 @@ from .views import (
     PalavrasUpdateView,
     SinglePalavrasView,
     ComentariosView,
+    ComentariosNoticiaView,
     ComentariosCreateView,
     ComentariosUpdateView,
     SingleComentariosView,
@@ -90,6 +91,7 @@ urlpatterns = [
 
     #COMENTARIOS
     url(r'^comentarios', ComentariosView.as_view(),name='comentarios'),
+    url('^get-comentariosnoticia/(?P<noticia_id>.+)/$', ComentariosNoticiaView.as_view()),
     url(r'^create-comentarios/', ComentariosCreateView.as_view(),name='comentarios-create'),
     url(r'^detail-comentarios/(?P<pk>\d+)', SingleComentariosView.as_view(),name='comentarios-datail'),
     url(r'^update-comentarios/(?P<pk>\d+)', ComentariosUpdateView.as_view(),name='comentarios-update'),

@@ -89,6 +89,7 @@ class SingleRevistaView(RetrieveAPIView):
     queryset = Revista.objects.all()
     serializer_class = RevistaSerializer
 
+
 class RevistaUpdateView(RetrieveUpdateAPIView):
     queryset = Revista.objects.all()
     serializer_class = RevistaSerializer
@@ -215,6 +216,7 @@ class EdicoesIDREVISTAView(ListCreateAPIView):
 class SingleEdicoesView(RetrieveAPIView):
     queryset = Edicoes.objects.all()
     serializer_class = EdicoesSerializer
+
 
 class EdicoesUpdateView(RetrieveUpdateAPIView):
     queryset = Edicoes.objects.all()

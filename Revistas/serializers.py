@@ -46,6 +46,16 @@ class UserSerializer(serializers.ModelSerializer):
         usuario.save()
         return validated_data
 
+class Base64ImageField(serializers.ImageField):
+    def from_native(self, data):
+        if isinstance(data, basestring) and data.startswith('data:image'):
+            # base64 encoded image - decode
+            format, imgstr = data.split(';base64,')  # format ~= data:image/X,
+            ext = format.split('/')[-1]  # guess file extension
+
+            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+
+        return super(Base64ImageField, self).from_native(data)
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -96,10 +106,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return data
 
 class RevistaSerializer(serializers.ModelSerializer):
-
+    imagem = Base64ImageField()
     class Meta:
         model = Revista
-        fields = ('id', 'issn', 'nome_revista_portugues', 'nome_revista_english')
+        fields = ('id', 'issn', 'nome_revista_portugues', 'nome_revista_english','imagem')
 
 class AutoresSerializer(serializers.ModelSerializer):
     
@@ -134,11 +144,11 @@ class ArtigosSerializer(serializers.ModelSerializer):
 
 
 class EdicoesSerializer(serializers.ModelSerializer):
-
+    imagem = Base64ImageField()
     revista_id = RevistaSerializer
     class Meta:
         model = Edicoes
-        fields = ('id', 'edicao_portugues', 'edicao_english', 'data_lancamento','revista_id')
+        fields = ('id', 'edicao_portugues', 'edicao_english', 'data_lancamento','revista_id','imagem')
    
 
 class AvaliacaoSerializer(serializers.ModelSerializer):
@@ -147,16 +157,7 @@ class AvaliacaoSerializer(serializers.ModelSerializer):
         model = Avaliacoes
         fields = ('id', 'nota', 'id_usuario', 'artigo')
 
-class Base64ImageField(serializers.ImageField):
-    def from_native(self, data):
-        if isinstance(data, basestring) and data.startswith('data:image'):
-            # base64 encoded image - decode
-            format, imgstr = data.split(';base64,')  # format ~= data:image/X,
-            ext = format.split('/')[-1]  # guess file extension
 
-            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
-
-        return super(Base64ImageField, self).from_native(data)
 
 class NoticiasCreateSerializer(serializers.ModelSerializer):
     #revista_relacionada = RevistaSerializer(many=False, read_only=True)

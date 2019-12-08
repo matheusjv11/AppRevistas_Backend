@@ -113,7 +113,8 @@ class Noticias(models.Model):
 class Comentarios(models.Model):
 
     corpo = models.TextField()
-    autor = models.PositiveIntegerField()
+    id_autor = models.PositiveIntegerField(default=1)
+    nome_autor = models.CharField( max_length=100,default="Not Found")
     noticia = models.ForeignKey(Noticias, on_delete=models.CASCADE)
     data_postagem = models.DateTimeField(default=now, editable=False)
     

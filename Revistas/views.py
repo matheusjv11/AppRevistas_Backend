@@ -271,6 +271,7 @@ class ComentariosNoticiaView(ListCreateAPIView):
         return Comentarios.objects.filter(noticia_id__id=noticia_id)
 
 
+
 class ComentariosCreateView(ListCreateAPIView):
 
     queryset = Comentarios.objects.all()

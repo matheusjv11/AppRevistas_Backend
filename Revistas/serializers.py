@@ -183,10 +183,29 @@ class ComentariosSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Comentarios
-        fields = ('id', 'corpo','autor','noticia')
+        fields = ('id', 'corpo','id_autor','nome_autor','noticia')
         extra_kwargs = {
-            'autor': {'read_only': False},
+            'id_autor': {'read_only': False},
+            'nome_autor': {'read_only': True,'write_only':False},
         }
+
+    def create(self, validated_data):
+        
+        corpo = validated_data['corpo']
+        id_autor = validated_data['id_autor']
+        noticia = validated_data['noticia']
+        
+        user = User.objects.get(id=id_autor)
+        first_name = user.first_name
+        last_name = user.last_name
+        nome_completo = first_name+" "+last_name
+
+        comentario_obj = Comentarios(corpo=corpo, id_autor=id_autor, nome_autor=nome_completo, noticia=noticia)
+        comentario_obj.save()
+
+        return validated_data
+
+
 
 class ArtigosParaUsuarioSerializer(serializers.ModelSerializer):
     

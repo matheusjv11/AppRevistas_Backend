@@ -164,20 +164,43 @@ class NoticiasCreateSerializer(serializers.ModelSerializer):
     imagem = Base64ImageField()
     class Meta:
         model = Noticias
-        fields = ('id', 'titulo', 'subtitulo','corpo','data_postagem','autor','revista_relacionada', 'link_artigo','imagem')
+        fields = ('id', 'titulo', 'subtitulo','corpo','data_postagem','id_autor','nome_autor','revista_relacionada', 'link_artigo','imagem')
         extra_kwargs = {
-            'autor': {'read_only': False},
+            'id_autor': {'read_only': False},
+            'nome_autor': {'read_only': True},
         }
+    
+    def create(self, validated_data):
+        
+        titulo = validated_data['titulo']
+        subtitulo = validated_data['subtitulo']
+        corpo = validated_data['corpo']
+        id_autor = validated_data['id_autor']
+        revista_relacionada = validated_data['revista_relacionada']
+        link_artigo = validated_data['link_artigo']
+        imagem = validated_data['imagem']
+        
+        user = User.objects.get(id=id_autor)
+        first_name = user.first_name
+        last_name = user.last_name
+        nome_completo = first_name+" "+last_name
+
+        noticias_obj = Noticias(titulo=titulo, subtitulo=subtitulo, corpo=corpo, id_autor=id_autor, nome_autor=nome_completo, revista_relacionada=revista_relacionada, link_artigo=link_artigo, imagem=imagem)
+        noticias_obj.save()
+
+        return validated_data
+
+    
 
 class NoticiasViewSerializer(serializers.ModelSerializer):
     revista_relacionada = RevistaSerializer(many=False, read_only=True)
     imagem = Base64ImageField()
     class Meta:
         model = Noticias
-        fields = ('id', 'titulo', 'subtitulo','corpo','data_postagem','autor','revista_relacionada', 'link_artigo','imagem')
-        extra_kwargs = {
-            'autor': {'read_only': False},
-        }
+        fields = ('id', 'titulo', 'subtitulo','corpo','data_postagem','id_autor','nome_autor','revista_relacionada', 'link_artigo','imagem')
+        
+
+        
 
 class ComentariosSerializer(serializers.ModelSerializer):
     

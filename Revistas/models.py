@@ -102,7 +102,8 @@ class Noticias(models.Model):
     corpo  = models.TextField()
     revista_relacionada = models.ForeignKey(Revista, on_delete=models.CASCADE, default=0)
     data_postagem = models.DateTimeField(default=now, editable=False)
-    autor = models.PositiveIntegerField()
+    id_autor = models.PositiveIntegerField(default=1)
+    nome_autor = models.CharField( max_length=100,default="Not Found")
     imagem = models.ImageField(upload_to=settings.MEDIA_ROOT, blank=True)
     link_artigo = models.TextField(blank=True)
     

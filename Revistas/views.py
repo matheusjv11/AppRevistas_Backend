@@ -329,6 +329,7 @@ class SingleNoticiasView(RetrieveAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasViewSerializer
 
+
 class NoticiasUpdateView(RetrieveUpdateAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasViewSerializer

@@ -179,7 +179,6 @@ class NoticiasCreateSerializer(serializers.ModelSerializer):
         revista_relacionada = validated_data['revista_relacionada']
         link_artigo = validated_data['link_artigo']
         imagem = validated_data['imagem']
-        
         user = User.objects.get(id=id_autor)
         first_name = user.first_name
         last_name = user.last_name

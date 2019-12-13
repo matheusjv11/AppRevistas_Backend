@@ -309,7 +309,7 @@ class NoticiasView(ListAPIView):
     search_fields = ['id','titulo','corpo','autor']
 
 
-
+@permission_classes((AllowAny, ))
 class NoticiasCreateView(CreateAPIView):
     
     queryset = Noticias.objects.all()
@@ -433,12 +433,14 @@ class UsuarioAppRemoveFavsView(ListAPIView):
         return Usuario.objects.filter(id=usuario_id)
 
 
+@permission_classes((AllowAny, ))
 class UsuarioAppAddAdminView(ListAPIView):
 
     serializer_class = UsuarioAppSerializer
     
     def get_queryset(self):
-
+        #trocar isso pra pegar por id do usuario django
+        
         usuario_id = self.kwargs.get('user_id')
         usuario_OBJ = Usuario.objects.get(id=usuario_id)    
         usuario_OBJ.administrador = True

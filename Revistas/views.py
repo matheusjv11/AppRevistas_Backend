@@ -440,7 +440,7 @@ class UsuarioAppAddAdminView(ListAPIView):
     
     def get_queryset(self):
         #trocar isso pra pegar por id do usuario django
-        
+
         usuario_id = self.kwargs.get('user_id')
         usuario_OBJ = Usuario.objects.get(id=usuario_id)    
         usuario_OBJ.administrador = True

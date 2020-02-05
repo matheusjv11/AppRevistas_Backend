@@ -37,7 +37,7 @@ edicao_en
 
 """
 - Se reiniciar o banco de dados do zero, colocar uma tupla 'Not found' em : Revista e Categoria.
-Todos os dados dessa tupla tem que ser 'Not found'.
+Todos os dados dessa tupla tem que ser 'Not found'. A função post() no final do código faz essa ação.
 """
 #----------------------------------------------------------------
 
@@ -188,6 +188,7 @@ def salvar(titulo_artigo_br,titulo_artigo_en,autores,descricao_artigo_br,descric
 
 
 def revista_escolhida(id):
+    #Essa função retorna as url's da Revista que terá seus dados recolhidos no OAI-PMH pela função 'run'
 
     site_inicial = ""
     proximo_site = ""
@@ -227,13 +228,6 @@ def revista_escolhida(id):
 
 def run(revista_OAI):
 
-    #Essas url's irá acessar as páginas do OAI-PMH das revistas pertencentes ao app
-    #site_inicial = 'https://sistemas.uft.edu.br/periodicos/index.php/observatorio/oai?verb=ListRecords&metadataPrefix=oai_dc'
-    #proximo_site = 'https://sistemas.uft.edu.br/periodicos/index.php/observatorio/oai?verb=ListRecords&resumptionToken='
-   
-
-    #Essa url irá acessar a pagina de categorias, e a partir disso será gerado um dicionario com essas informações
-    #site_categorias  = 'https://sistemas.uft.edu.br/periodicos/index.php/observatorio/oai?verb=ListSets'
     
     site_inicial, proximo_site, site_categorias = revista_escolhida(revista_OAI)
     site = site_inicial
@@ -243,7 +237,7 @@ def run(revista_OAI):
     json_categorias = json.loads(string_categorias)
     
     
-
+#--------Recolhimento das informações das categorias--------#
     dicionario_categorias  = json_categorias['OAI-PMH']['ListSets']['set']
     categorias = {}
 
@@ -254,8 +248,9 @@ def run(revista_OAI):
             identifier_categoria = dicionario_categorias[b]['setSpec']
 
             categorias[identifier_categoria] = nome_categoria
+#--------Fim Recolhimento das informações das categorias--------#
 
-    
+#--------Recolhimento das informações dos artigos-------#   
     while True:
 
         req = requests.get(site)
@@ -442,18 +437,18 @@ def run(revista_OAI):
 
             
 
-        #teste =  dicionario2['OAI-PMH']['ListRecords']['resumptionToken']
-        
+       
+       #Parte do código que chama a proxima pagina de artigos
+
         if '#text' in dicionario2['OAI-PMH']['ListRecords']['resumptionToken']:
             resumption_token = dicionario2['OAI-PMH']['ListRecords']['resumptionToken']['#text']
-            site = proximo_site+resumption_token
-            
-            
+            site = proximo_site+resumption_token    
         else:
             resumption_token = 'Final'
             
             break                                                                         
 
+#--------Fim Recolhimento das informações dos artigos-------#
 def post():
 
    revista_to_categoria =  Revista(issn=0, nome_revista_portugues='Not found', nome_revista_english='Not found')

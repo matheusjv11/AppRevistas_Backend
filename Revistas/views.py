@@ -1,10 +1,7 @@
 from django.shortcuts import render
-from rest_framework import viewsets, generics
-#from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from .serializers import (
     UserSerializer,
-    UserLoginSerializer,
     UserUpdateSerializer,
     RevistaSerializer,
     AutoresSerializer,
@@ -18,8 +15,6 @@ from .serializers import (
     AvaliacaoSerializer,
     UsuarioAppSerializer,
     )
-
-from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.permissions import AllowAny
@@ -40,19 +35,31 @@ from Revistas.models import Autores, Avaliacoes,Artigos,Categoria,Edicoes,Revist
 from django.db.models import Q
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.parsers import JSONParser, MultiPartParser
-from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import authentication_classes, permission_classes
 import json
-from rest_framework import status
+#---------------------------------
 
-#------ views de Usuarios --------
+
+
+"""
+    -Nesse arquivo consta as configurações de como cada tabela do banco de dados vai ser disposta na API 
+    fornecida por 'serializers' do RestFramework.
+   
+    -O comando @permission_classes((AllowAny, )) faz com quem qualquer pessoa tenha acesso à essa página
+    da API, caso contrário, o acesso se dá apenas mediante à uma autenticação.
+
+    -Quando for criar um novo usuário, a UserView será chamada pra criar um usuário padrão Django, e automaticamente
+    será criado tambem um UsuarioAPP.
+   """
+
+#------ views de Usuarios ------------------------#
 
 User = get_user_model()
 
 @permission_classes((AllowAny, ))
 class UserView(ListCreateAPIView):
-
+    
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -72,7 +79,9 @@ class UserUpdateView(RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserUpdateSerializer
 
-#------ views de Revistas--------
+#------ fim de Usuarios ------------------------#
+
+#------ views de Revistas--------------------------------#
 
 @permission_classes((AllowAny, ))
 class RevistaView(ListAPIView):
@@ -94,11 +103,9 @@ class RevistaUpdateView(RetrieveUpdateAPIView):
     queryset = Revista.objects.all()
     serializer_class = RevistaSerializer
 
-"""class AutoresDeleteView(DestroyAPIView):
-    queryset = Autores.objects.all()
-    serializer_class = AutoresSerializer"""
+#------ fim views de Revistas--------------------------------#
 
-#----------- view Autores --------------
+#----------- view Autores ------------------------------#
 
 @permission_classes((AllowAny, ))
 class AutoresView(ListAPIView):
@@ -119,8 +126,9 @@ class AutoresUpdateView(RetrieveUpdateAPIView):
     queryset = Autores.objects.all()
     serializer_class = AutoresSerializer
 
+#----------- fim view Autores ------------------------------#
 
-#----------- view Artigos --------------
+#----------- view Artigos ------------------------------#
 
 @permission_classes((AllowAny, ))
 class ArtigosView(ListAPIView):
@@ -150,6 +158,7 @@ class ArtigosBYEDICOESIDView(ListAPIView):
         edicao_id = self.kwargs['edicao_id']
         return Artigos.objects.filter(edicao_id__id=edicao_id)
 
+
 @permission_classes((AllowAny, ))
 class SingleArtigosView(RetrieveAPIView):
     queryset = Artigos.objects.all()
@@ -159,8 +168,9 @@ class ArtigosUpdateView(RetrieveUpdateAPIView):
     queryset = Artigos.objects.all()
     serializer_class = ArtigosSerializer
 
+#----------- fim view Artigos ------------------------------#
 
-#----------- view Categoria --------------
+#----------- view Categoria ------------------------------#
 
 @permission_classes((AllowAny, ))
 class CategoriaView(ListAPIView):
@@ -181,8 +191,9 @@ class CategoriaUpdateView(RetrieveUpdateAPIView):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
 
+#----------- fim view Categoria ------------------------------#
 
-#----------- view Edicoes --------------
+#----------- view Edicoes ------------------------------#
 
 @permission_classes((AllowAny, ))
 class EdicoesView(ListAPIView):
@@ -222,9 +233,9 @@ class EdicoesUpdateView(RetrieveUpdateAPIView):
     queryset = Edicoes.objects.all()
     serializer_class = EdicoesSerializer
 
+#----------- fim view Edicoes ------------------------------#
 
-
-#----------- view Palavras-chave --------------
+#----------- view Palavras-chave ------------------------------#
 
 @permission_classes((AllowAny, ))
 class PalavrasView(ListAPIView):
@@ -245,7 +256,9 @@ class PalavrasUpdateView(RetrieveUpdateAPIView):
     queryset = Palavras_chave.objects.all()
     serializer_class = PalavrasChaveSerializer
 
-#----------- view Comentario --------------
+#----------- fim view Palavras-chave ------------------------------#
+
+#----------- view Comentario ------------------------------#
 
 @permission_classes((AllowAny, ))
 class ComentariosView(ListAPIView):
@@ -294,8 +307,9 @@ class ComentariosUpdateView(RetrieveUpdateAPIView):
     queryset = Comentarios.objects.all()
     serializer_class = ComentariosSerializer
 
+#----------- fim view Comentario ------------------------------#
 
-#----------- view Noticias --------------
+#----------- view Noticias ------------------------------#
 
 @permission_classes((AllowAny, ))
 class NoticiasView(ListAPIView):
@@ -334,8 +348,9 @@ class NoticiasUpdateView(RetrieveUpdateAPIView):
     queryset = Noticias.objects.all()
     serializer_class = NoticiasViewSerializer
 
+#----------- fim view Noticias ------------------------------#
 
-#----------- view Avaliações --------------
+#----------- view Avaliações ------------------------------#
 
 @permission_classes((AllowAny, ))
 class AvaliacoesView(ListAPIView):
@@ -376,8 +391,9 @@ class AvaliacoesUpdateView(RetrieveUpdateAPIView):
     queryset = Avaliacoes.objects.all()
     serializer_class = AvaliacaoSerializer
 
+#----------- fim view Avaliações ------------------------------#
 
-#----------- view Usuario APP --------------
+#----------- view Usuario APP ------------------------------#
 
 @permission_classes((AllowAny, ))
 class UsuarioAppView(ListAPIView):
@@ -499,3 +515,5 @@ class UsuarioAppRemoveRevistasAdminView(ListAPIView):
         usuario_OBJ.gerencia_revista.remove(revista_OBJ)
         
         return Usuario.objects.filter(id=usuario_id)
+
+#----------- fim view Usuario APP ------------------------------#

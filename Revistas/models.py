@@ -4,9 +4,11 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.timezone import now
 
-# Create your models here.
+# Cada classe é uma model(tabela) que irá receber informações relacionadas a si.
+
 class Revista(models.Model):
-    
+    #Informações sobre cada revista registrada
+
     issn = models.CharField(max_length=20)
     nome_revista_portugues = models.CharField(max_length=100)
     nome_revista_english = models.CharField(max_length=100)
@@ -19,14 +21,16 @@ class Revista(models.Model):
     def __str__(self):
         return self.nome_revista_portugues
 
-class Palavras_chave(models.Model):
-    
+class Palavras_chave(models.Model):    
+    #Palavras-chaves que vêm em cada artigo
+
     assunto = models.CharField(max_length=150)
     
     def __str__(self):
         return self.assunto
 
 class Autores(models.Model):
+    #Autores dos artigos (Um autores pode estar em varios artigos)
 
     nome_autor = models.CharField( max_length=150)
 
@@ -34,6 +38,7 @@ class Autores(models.Model):
         return self.nome_autor
 
 class Edicoes(models.Model):
+    #Informações das edições de cada revista
 
     edicao_portugues = models.CharField(max_length=100)
     edicao_english = models.CharField(max_length=100)
@@ -45,7 +50,7 @@ class Edicoes(models.Model):
    
 
 class Categoria(models.Model):
-
+    #Informação sobre as categorias que as revistas usam
     
     nome_categoria = models.CharField(max_length=50)
     revista = models.ForeignKey(Revista, on_delete=models.CASCADE)
@@ -57,7 +62,7 @@ class Categoria(models.Model):
 
 
 class Artigos(models.Model):
-
+    #Todos os dados dos artigos recolhidos
     
     titulo_portugues = models.CharField( max_length=150)
     titulo_english = models.CharField( max_length=150)
@@ -73,6 +78,7 @@ class Artigos(models.Model):
     
 
 class Usuario(models.Model):
+    #Usuario do APP
     
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     artigos_favoritos = models.ManyToManyField(Artigos)
@@ -88,6 +94,7 @@ class Usuario(models.Model):
     
 
 class Avaliacoes(models.Model):
+    #Avaliação que será relacionado aos artigos
     # de 0 a 5 para artigo
     nota =  models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     id_usuario = models.PositiveIntegerField()
@@ -96,6 +103,7 @@ class Avaliacoes(models.Model):
 
 
 class Noticias(models.Model):
+    #Noticias da página inicial do APP
 
     titulo = models.CharField( max_length=150)
     subtitulo = models.CharField(max_length=350, default="Not found")
@@ -112,6 +120,7 @@ class Noticias(models.Model):
         return self.titulo
 
 class Comentarios(models.Model):
+    #Comentarios de cada noticia
 
     corpo = models.TextField()
     id_autor = models.PositiveIntegerField(default=1)

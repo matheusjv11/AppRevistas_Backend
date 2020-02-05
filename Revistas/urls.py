@@ -110,6 +110,8 @@ urlpatterns = [
     url(r'^detail-avaliacoes/(?P<pk>\d+)', SingleAvaliacoesView.as_view(),name='avaliacoes-datail'),
     url(r'^update-avaliacoes/(?P<pk>\d+)', AvaliacoesUpdateView.as_view(),name='avaliacoes-update'),
 
+
+
     #USUARIOS
     url(r'^usuarios', UserView.as_view(),name='usuarios'),
     url(r'^detail-user/(?P<pk>\d+)', SingleUserView.as_view(),name='User-datail'),
@@ -125,9 +127,7 @@ urlpatterns = [
     url('^remove-administrador/(?P<user_id>.+)/$', UsuarioAppRemoveAdminView.as_view()),
     url('^add-revistaadministrador/(?P<user_id>.+)/(?P<revista_id>.+)', UsuarioAppAddRevistasAdminView.as_view()),
     url('^remove-revistaadministrador/(?P<user_id>.+)/(?P<revista_id>.+)', UsuarioAppRemoveRevistasAdminView.as_view()),
-    #url(r'^detail-noticias/(?P<pk>\d+)', SingleNoticiasView.as_view(),name='noticias-datail'),
-    #url(r'^update-noticias/(?P<pk>\d+)', NoticiasUpdateView.as_view(),name='noticias-update'),
-    #url(r'^delete-noticias/(?P<pk>\d+)', NoticiasDeleteView.as_view(),name='noticias-delete'),
+    
 
     
 ]

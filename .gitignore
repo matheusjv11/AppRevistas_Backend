@@ -1,4 +1,3 @@
-myvenv
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -9,9 +8,8 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-docs/
 env/
-myvenv/
+docs/
 build/
 develop-eggs/
 dist/
@@ -86,6 +84,9 @@ celerybeat-schedule
 # dotenv
 .env
 
+.myvenv
+myvenv/
+
 # virtualenv
 .venv
 venv/
@@ -117,3 +118,5 @@ ENV/
 # **/migrations/**
 # !**/migrations
 # !**/migrations/__init__.py
+docs/autentificacao.md
+docs/migracao.md

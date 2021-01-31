@@ -1,4 +1,3 @@
-
 myvenv
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -10,6 +9,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+docs/
 env/
 myvenv/
 build/
@@ -27,6 +27,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -105,7 +106,7 @@ ENV/
 
 .DS_Store
 *.sqlite3
-media/
+# media/
 *.pyc
 *.db
 *.pid

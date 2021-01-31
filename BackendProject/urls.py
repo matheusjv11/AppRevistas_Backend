@@ -15,28 +15,39 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls.static import static
-from django.conf.urls import include,url
-from rest_framework.authtoken import views
-from Revistas.views import UserView,RevistaView
+from django.conf.urls import include, url
 from django.conf import settings
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from django.views.generic.base import TemplateView
 
 urlpatterns = [
     #path('api-auth/', include('rest_framework.urls')),
     #path('api/', include('Revistas.urls')),
-    #Endpoints para rest-auth https://django-rest-auth.readthedocs.io/en/latest/api_endpoints.html#social-media-authentication
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/', include("Revistas.urls", namespace='revista-api')),
-    path('rest-auth/', include('rest_auth.urls')),
-    path('password-reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset.html'), name='password_reset'),
-    path('password-reset/done', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
-    path('password-reset-confirm/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(
-             template_name='registration/password_reset_confirm.html'
-         ),
-         name='password_reset_confirm'),
+    # Endpoints para rest-auth https://django-rest-auth.readthedocs.io/en/latest/api_endpoints.html#social-media-authentication
+
+    url(r'', admin.site.urls),
+
+    url(r'^api/', include("revistas.urls", namespace='revista-api')),
+    
+    url(r'^api/', include("artigos.urls", namespace='artigos-api')),
+    
+    url(r'^api/', include("noticias.urls", namespace='noticias-api')),
+    
+    url(r'^api/', include("usuarios.urls", namespace='usuarios-api')),
+
+
+    # Auth
+    path('rest-auth/', include('rest_auth.urls')), path('password-reset/', auth_views.PasswordResetView.as_view(
+        template_name='registration/password_reset.html'), name='password_reset'),
+
+    path('password-reset/done', auth_views.PasswordResetDoneView.as_view(
+        template_name='registration/password_reset_done.html'), name='password_reset_done'),
+    
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='registration/password_reset_confirm.html'), name='password_reset_confirm'),
 ]
-if settings.DEBUG: # new
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+if settings.DEBUG:  # new
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

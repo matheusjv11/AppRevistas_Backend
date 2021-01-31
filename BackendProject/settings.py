@@ -10,10 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+import django_heroku
 import os
-
+import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+
+# Insert the two lines below
+# APPS_DIR = os.path.join(BASE_DIR, 'AppRevistas_Backend/apps/')
+# sys.path.insert(0, APPS_DIR)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
@@ -38,12 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Revistas',
+    'apps.revistas',
+    'apps.artigos',
+    'apps.noticias',
+    'apps.usuarios',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
     'crispy_forms',
-    
 ]
 
 MIDDLEWARE = [
@@ -54,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
 ]
 
 ROOT_URLCONF = 'BackendProject.urls'
@@ -113,7 +121,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ), 
+    ),
 }
 
 # Internationalization
@@ -134,11 +142,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_URL = '/media/'
+
 MEDIA_ROOT = 'media'
+
 # Configure Django App for Heroku.
-import django_heroku
 django_heroku.settings(locals())
 
 OLD_PASSWORD_FIELD_ENABLED = True
@@ -152,7 +163,13 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'siru.uft@gmail.com'
 EMAIL_HOST_PASSWORD = 'gbapkwhvdjukvdbd'
 
+AUTH_USER_MODEL = "usuarios.Usuario"
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+
 #DEFAULT_FROM_EMAIL = 'NÃO RESPONDA --- siru.uft@gmail.com'
 #SERVER_EMAIL = 'siru.uft@gmail.com'
 #EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
-

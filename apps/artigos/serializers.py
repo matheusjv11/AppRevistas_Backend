@@ -36,8 +36,13 @@ class ArtigosSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artigo
-        #fields = ('id', 'titulo_portugues', 'titulo_english', 'descricao_portugues', 'descricao_english', 'link_pdf','categoria','edicao','autores__id')
-        fields = '__all__'
+        fields = ('id', 'palavras_chave','titulo_portugues', 'titulo_english', 'descricao_portugues', 'descricao_english', 'categoria','edicao','revista','autores','link_pdf','identifier')
+        # fields = '__all__'
+
+    revista = serializers.SerializerMethodField('get_revista_data')
+
+    def get_revista_data(self, obj):
+        return obj.edicao.revista.id
 
 
 class AvaliacaoSerializer(serializers.ModelSerializer):

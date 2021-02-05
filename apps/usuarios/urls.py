@@ -12,7 +12,7 @@ app_name = "usuarios"
 
 urlpatterns = [
 
-    url(r'^usuario/', UsuarioAppPorIdView.as_view()),
+    url(r'^usuario/$', UsuarioAppPorIdView.as_view()),
     # Get all
     url(r'^usuarios/$', UserView.as_view(), name='usuarios'),
     # Get:id

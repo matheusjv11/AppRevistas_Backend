@@ -120,3 +120,4 @@ ENV/
 # !**/migrations/__init__.py
 docs/autentificacao.md
 docs/migracao.md
+media/

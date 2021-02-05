@@ -38,6 +38,7 @@ class Artigo(models.Model):
     def __str__(self):
         return self.titulo_portugues
     
+    @property
     def revista(self):
         return self.edicao.revista
 

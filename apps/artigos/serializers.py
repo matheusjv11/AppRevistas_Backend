@@ -55,4 +55,4 @@ class ArtigosParaUsuarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artigo
-        fields = ['id']
+        fields = '__all__'

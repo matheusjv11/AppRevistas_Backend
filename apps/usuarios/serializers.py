@@ -1,5 +1,5 @@
 from apps.usuarios.models import *
-from apps.artigos.serializers import ArtigosParaUsuarioSerializer
+from apps.artigos.serializers import ArtigosParaUsuarioSerializer, ArtigosSerializer
 from rest_framework import serializers
 from rest_framework.serializers import CharField, EmailField
 from rest_framework.validators import ValidationError
@@ -108,7 +108,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
 
 class UsuarioAppSerializer(serializers.ModelSerializer):
 
-    artigos_favoritos = ArtigosParaUsuarioSerializer(many=True, read_only=True)
+    artigos_favoritos = ArtigosSerializer(many=True, read_only=True)
     # current_user = serializers.SerializerMethodField('_user')
     
     @property

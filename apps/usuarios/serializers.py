@@ -17,7 +17,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
+        model = Usuario
         fields = ('id', 'username', 'first_name',
                   'last_name', 'email', 'password')
         extra_kwargs = {
@@ -38,15 +38,15 @@ class UserSerializer(serializers.ModelSerializer):
         last_name = validated_data['last_name']
         email = validated_data['email']
         password = validated_data['password']
-        user_obj = User(username=username, first_name=first_name,
+        user_obj = Usuario(username=username, first_name=first_name,
                         last_name=last_name, email=email)
         user_obj.set_password(password)
         user_obj.save()
 
         # Cria token e um usuario especifico da aplicação
         Token.objects.get_or_create(user=user_obj)
-        usuario = Usuario(user=user_obj)
-        usuario.save()
+        # usuario = Usuario(user=user_obj)
+        # usuario.save()
         return validated_data
 
 

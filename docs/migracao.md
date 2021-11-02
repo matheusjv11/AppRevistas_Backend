@@ -4,3 +4,5 @@
    python manage.py makemigrations revistas artigos noticias usuarios
 
 - (**obs**: Devido a estrutura de organização do projeto deve-se usar o **makemigrations** de forma individual para cada app)
+
+workon myenv

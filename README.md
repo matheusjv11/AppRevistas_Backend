@@ -1,1 +1,1 @@
-# AppRevistas_Backend
+# easyopenjsbackend

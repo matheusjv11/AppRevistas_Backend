@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Comentario
+from .models import Comentario, Noticia
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
@@ -24,8 +24,16 @@ class NoticiaAdmin(admin.ModelAdmin):
 
     comentatios_link.short_description = "Comentários"
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        revistas_admin = request.user.gerencia_revista.all()
+        if request.user.is_superuser:
+            return qs
+        ids = tuple(list(map(lambda revista: str(revista.pk), revistas_admin)))
+        return qs.filter(edicao__revista__in=ids)
 
-# admin.site.register(Noticia, NoticiaAdmin)
+
+admin.site.register(Noticia, NoticiaAdmin)
 
 
 class ComentarioAdmin(admin.ModelAdmin):

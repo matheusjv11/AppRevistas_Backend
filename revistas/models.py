@@ -4,6 +4,8 @@ from django.utils.html import mark_safe
 
 
 class Revista(models.Model):
+    class Meta:
+        verbose_name_plural = "  Revistas"  # 2 spaces
     # Informações sobre cada revista registrada
 
     issn = models.CharField(max_length=20)

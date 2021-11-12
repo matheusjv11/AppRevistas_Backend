@@ -7,8 +7,8 @@ from .models import *
 
 class ArtigoAdmin(admin.ModelAdmin):
     list_display = ('titulo_portugues', 'revista', 'edicao',
-                    'data_lancamento', 'autores_link', 'palavras_chave_link')
-    list_filter = ('categoria',)
+                    'data_lancamento', 'autores_link', 'palavras_chave_link', 'artigo_url',)
+    list_filter = ('categoria', 'edicao')
     list_display_links = ('titulo_portugues',)
     search_fields = ('edicao__edicao_portugues', 'categoria__nome_categoria', 'autores__nome_autor',
                      'palavras_chave__assunto', 'titulo_portugues', 'titulo_english', 'descricao_portugues', 'descricao_english',)
@@ -24,18 +24,28 @@ class ArtigoAdmin(admin.ModelAdmin):
         url = (
             reverse("admin:artigos_autor_changelist")
             + "?"
-            + urlencode({"artigo__id__exact=": f"{obj.id}"})
+            + urlencode({"artigo__id__exact": f"{obj.id}"})
         )
         return format_html('<a href="{}">{} Autores</a>', url, count)
 
     autores_link.short_description = "Autores"
+
+    def artigo_url(self, obj):
+        link_pdf = obj.link_pdf
+
+        if link_pdf:
+            return format_html('<a href="{}"> PDF</a>', link_pdf)
+        else:
+            return format_html('<h1> <h1>', )
+
+    artigo_url.short_description = "PDF"
 
     def palavras_chave_link(self, obj):
         count = obj.palavras_chave.count()
         url = (
             reverse("admin:artigos_palavrachave_changelist")
             + "?"
-            + urlencode({"artigo__id__exact=": f"{obj.id}"})
+            + urlencode({"artigo__id__exact": f"{obj.id}"})
         )
         return format_html('<a href="{}">{} Palavras Chave</a>', url, count)
 

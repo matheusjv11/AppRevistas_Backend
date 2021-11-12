@@ -12,17 +12,15 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-""" 
+"""
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf.urls import include, url
 from django.conf import settings
 from django.urls import path
 from django.contrib.auth import views as auth_views
+# from rest_framework import permissions
 
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
 
 # schema_view = get_schema_view(
 #     openapi.Info(

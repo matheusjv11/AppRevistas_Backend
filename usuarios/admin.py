@@ -8,25 +8,22 @@ admin.autodiscover()
 admin.site.enable_nav_sidebar = False
 admin.site.site_header = "Sistema de Administração de Revistas"
 admin.site.site_title = "Sistema de Administração de Revistas"
+
+
+# print(admin.site.urls)
+
+
 # admin.site.index_title = "Index title"
 
 
 class UserAdminConfig(UserAdmin):
     list_display = ['email', 'username', 'first_name']
-<<<<<<< HEAD
-    search_fields = ['email', 'username', 'city']
-=======
     search_fields = ['email', 'username']
->>>>>>> 65818cbf8e085548df4e0a77a1d447bda7022fae
     readonly_fields = ['date_joined', 'last_login']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Informaçoes pessoais', {
-<<<<<<< HEAD
-         'fields': ('username', 'first_name', 'last_name', 'date_of_birth', 'city')}),
-=======
          'fields': ('username', 'first_name', 'last_name')}),
->>>>>>> 65818cbf8e085548df4e0a77a1d447bda7022fae
         ('Atividades', {'fields': ('date_joined', 'last_login')}),
         ('Permisões', {'fields': ('is_admin',
                                   'is_active', 'is_staff', 'is_superuser', 'gerencia_revista', 'groups', 'user_permissions')}),
@@ -35,11 +32,7 @@ class UserAdminConfig(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-<<<<<<< HEAD
-            'fields': ('email', 'first_name', 'date_of_birth', 'city', 'password1', 'password2'),
-=======
             'fields': ('email', 'first_name', 'password1', 'password2'),
->>>>>>> 65818cbf8e085548df4e0a77a1d447bda7022fae
         }),
     )
 

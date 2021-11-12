@@ -32,12 +32,13 @@ SECRET_KEY = 'di61rv0f)*dsqnqh3))s4jn3)0-f&sbb8qv&6(#at4^7ii#lkt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sisadminrev.pythonanywhere.com']
+ALLOWED_HOSTS = ['sisadminrev.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_reorder',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,15 +56,34 @@ INSTALLED_APPS = [
     'drf_yasg',
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+# ADMIN_REORDER = (
+#     ('app1', ('App1Model1', 'App1Model2', 'App1Model3')),
+#     ('app2', ('App2Model1', 'App2Model2')),
+# )
+
+ADMIN_REORDER = (  # Keep original label and models 'sites',
+
+    # Rename app
+    # {'app': 'auth', },
+
+    # Reorder app models
+    {'app': 'revistas', 'models': (
+        'revistas.Revista', 'revistas.Edicao', 'artigos.Artigo')},
+
+    # # Exclude models
+    {'app': 'auth', 'models': ('usuarios.Usuario', 'auth.Group')},
+
+    {'app': 'noticias', 'models': ('noticias.Noticia',)},
+
+    # # Cross-linked models
+    # {'app': 'auth', 'models': ('auth.User', 'sites.Site')},
+
+    # models with custom name
+    # {'app': 'auth', 'models': (
+    #  'auth.Group',
+    #  {'model': 'auth.User', 'label': 'Staff'},
+    #  )},
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,8 +93,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'admin_reorder.middleware.ModelAdminReorder',
 ]
+
+# MIDDLEWARE = [
+#     'django.middleware.security.SecurityMiddleware',
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+# ]
 
 ROOT_URLCONF = 'backend.urls'
 

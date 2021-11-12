@@ -38,8 +38,8 @@ edicao_en
 # -------AVISOS-------"
 
 """
-- Se reiniciar o banco de dados do zero, colocar uma tupla 'Not found' em : Revista e Categoria.
-Todos os dados dessa tupla tem que ser 'Not found'. A função post() no final do código faz essa ação.
+- Se reiniciar o banco de dados do zero, colocar uma tupla 'Não listado' em : Revista e Categoria.
+Todos os dados dessa tupla tem que ser 'Não listado'. A função post() no final do código faz essa ação.
 """
 # ----------------------------------------------------------------
 
@@ -90,7 +90,7 @@ def salvar(titulo_artigo_br, titulo_artigo_en, autores, descricao_artigo_br, des
 
                 else:
                     if len(identifier_edicao) < 5:
-                        identifier_edicao = 'Not found'
+                        identifier_edicao = 'Não listado'
 
                     revista_to_edicao = Revista.objects.get(issn=issn_revista)
 
@@ -102,7 +102,7 @@ def salvar(titulo_artigo_br, titulo_artigo_en, autores, descricao_artigo_br, des
                 # Para colocar uma FK, é preciso pesquisa o seu id na tabela sql, a pesquisa pode ser feita
                 # pesquisando por o nome de alguma coluna, e assim, puxa o id
                 if len(identifier_edicao) < 5:
-                    identifier_edicao = 'Not found'
+                    identifier_edicao = 'Não listado'
 
                 revista_to_edicao = Revista.objects.get(issn=issn_revista)
 
@@ -132,7 +132,7 @@ def salvar(titulo_artigo_br, titulo_artigo_en, autores, descricao_artigo_br, des
             edicao_to_artigo = Edicao.objects.get(
                 identifier=identifier_edicao)
 
-            if identifier_edicao == 'Not found':
+            if identifier_edicao == 'Não listado':
                 revista_to_except = Revista.objects.get(issn=issn_revista)
                 edicao_to_artigo = Edicao.objects.get(
                     edicao_portugues=edicao, revista=revista_to_except)
@@ -149,7 +149,8 @@ def salvar(titulo_artigo_br, titulo_artigo_en, autores, descricao_artigo_br, des
             categoria_to_artigo = Categoria.objects.get(
                 identifier=identifier_categoria, revista_id=revista)
         except:
-            categoria_to_artigo = Categoria.objects.get(identifier='Not found')
+            categoria_to_artigo = Categoria.objects.get(
+                identifier='Não listado')
 
         novo_artigo = Artigo(titulo_portugues=titulo_artigo_br,
                              titulo_english=titulo_artigo_en,
@@ -214,10 +215,10 @@ def revista_escolhida(oai_url_base):
 
     # elif id == 2:
 
-    #     # Revista Desafios
-    #     site_inicial = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListRecords&metadataPrefix=oai_dc'
-    #     proximo_site = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListRecords&resumptionToken='
-    #     site_categorias = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListSets'
+        # Revista Desafios
+    # site_inicial = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListRecords&metadataPrefix=oai_dc'
+    # proximo_site = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListRecords&resumptionToken='
+    # site_categorias = 'https://sistemas.uft.edu.br/periodicos/index.php/desafios/oai?verb=ListSets'
 
     # elif id == 3:
 
@@ -235,7 +236,7 @@ def revista_escolhida(oai_url_base):
 
 
 def run(revista_OAI):
-    revista = Revista.objects.filter(nome_revista_portugues='Not found')
+    revista = Revista.objects.filter(nome_revista_portugues='Não listado')
     if not revista:
         post()
     print("Iniciando a atualização do banco...")
@@ -306,17 +307,17 @@ def run(revista_OAI):
             else:
 
                 titulo_artigo_br = titulo_artigo['#text']
-                titulo_artigo_en = 'Not found'
+                titulo_artigo_en = 'Não listado'
 
             if 'dc:creator' in lista[x]['metadata']['oai_dc:dc'].keys():
                 autores = lista[x]['metadata']['oai_dc:dc']['dc:creator']
             else:
-                autores = "Not found"
+                autores = "Não listado"
 
             if 'dc:description' in lista[x]['metadata']['oai_dc:dc']:
                 descricao_artigo = lista[x]['metadata']['oai_dc:dc']['dc:description']
             else:
-                descricao_artigo = "Not found"
+                descricao_artigo = "Não listado"
 
             if type(descricao_artigo) is list:
                 for z in range(len(descricao_artigo)):
@@ -333,9 +334,9 @@ def run(revista_OAI):
                 try:
                     descricao_artigo_br = descricao_artigo['#text']
                 except:
-                    descricao_artigo_br = 'Not found'
+                    descricao_artigo_br = 'Não listado'
 
-                descricao_artigo_en = 'Not found'
+                descricao_artigo_en = 'Não listado'
 
             revista = lista[x]['metadata']['oai_dc:dc']['dc:source']
             identifier_artigo = lista[x]['header']['identifier']
@@ -387,19 +388,19 @@ def run(revista_OAI):
                             break
                     except:
                         revista_br = revista[0]['#text']
-                        revista_en = 'Not found'
+                        revista_en = 'Não listado'
 
             else:
                 revista_br = revista['#text']
-                revista_en = 'Not found'
+                revista_en = 'Não listado'
 
             nome_revista = revista_br.split(';')[0]
             sobre_edicao = revista_br.split(';')[1]
             edicao = sobre_edicao.split(':')[0]
 
-            if revista_en == 'Not found':
-                nome_revista_en = 'Not found'
-                sobre_edicao_en = 'Not found'
+            if revista_en == 'Não listado':
+                nome_revista_en = 'Não listado'
+                sobre_edicao_en = 'Não listado'
             else:
                 nome_revista_en = revista_en.split(';')[0]
                 sobre_edicao_en = revista_en.split(';')[1]
@@ -421,14 +422,14 @@ def run(revista_OAI):
                     else:
                         link_pdf = lista[x]['metadata']['oai_dc:dc']['dc:relation'][1]
             else:
-                link_pdf = 'Not found'
+                link_pdf = 'Não listado'
 
             identifier_categoria = lista[x]['header']['setSpec'][0]
 
             if identifier_categoria in categorias:
                 categoria_artigo = categorias[identifier_categoria]
             else:
-                categoria_artigo = 'Not found'
+                categoria_artigo = 'Não listado'
 
             if type(autores) is str:
                 autores = autores.split(';')
@@ -473,8 +474,8 @@ def run(revista_OAI):
 
 def post():
     revista_to_categoria = Revista(
-        issn=0, nome_revista_portugues='Not found', nome_revista_english='Not found')
+        issn=0, nome_revista_portugues='Não listado', nome_revista_english='Não listado')
     revista_to_categoria.save()
     nova_categoria = Categoria(
-        nome_categoria='Not found', revista=revista_to_categoria, identifier='Not found')
+        nome_categoria='Não listado', revista=revista_to_categoria, identifier='Não listado')
     nova_categoria.save()
